@@ -19,6 +19,10 @@ Aplicaţie permite fiecărui utilizator să memoreze una sau mai multe locații 
 
 Fiecare cafenea are o pagina cu detalii, precum adresa cafenelei, dar și posibilitatea selectării opțiunii de calculare a traseului optim până la cafeneaua respectivă. Informaţiile afişate pe această pagină sunt influențate de ratingul utilizatorului, dar și de utilizitori speciali numiţi manager de cafenea. Aceştia din urmă pot oferi informații despre cafeneaua pe care o reprezintă. De asemenea, adăugare sau ștergerea cafenelelor este gestionată de anumiți utilizatori speciali numiţi administratori.
 
+## DESPRE DIAGRAME
+
+**TOATE** diagramele se pot găsi în folderul images pentru o mai bună lizibilitate.
+
 ## USE CASE DIAGRAM
 
 ![use case diagram pentru cofinder](images/Use%20case%20diagram.png)
@@ -26,3 +30,7 @@ Fiecare cafenea are o pagina cu detalii, precum adresa cafenelei, dar și posibi
 ## GANTT CHART
 
 ![gantt chart pentru cofinder](images/Gantt%20chart.png)
+
+## FLOWCHART DIAGRAM
+
+![flowchart diagram pentru cofinder](images/Flowchart%20diagram.png)
