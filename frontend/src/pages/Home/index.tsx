@@ -8,8 +8,9 @@ const Home = () => {
     lat: 44.4355355,
     lng: 26.0995867,
   });
+  const key = import.meta.env.VITE_API_KEY as string;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyCzYvsV3yQRFGmCPzHBNfppqUcTS4fFyDY",
+    googleMapsApiKey: key,
   });
 
   if ("geolocation" in navigator) {
