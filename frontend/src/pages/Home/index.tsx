@@ -1,13 +1,9 @@
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-} from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import MarkerCoffee from "../../assets/icons/Marker_Coffee.svg";
 import { useState } from "react";
 
 const Home = () => {
-  const [markers, setMarkers] = useState([]);
+  const [markers, setMarkers] = useState<JSX.Element[]>([]);
   const [coord, setCoord] = useState<{ lat: number; lng: number }>({
     lat: 44.4355355,
     lng: 26.0995867,
