@@ -38,22 +38,25 @@ export default function Register() {
   async function registerSubmitHandle(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setStatus({ state: "pending" });
-
-    navigate("/");
+    const timeout = setTimeout(() => {
+      navigate("/");
+      clearTimeout(timeout);
+    }, 1000);
+    
   }
 
   return (
-    <>
-      <header className="content-small register-header">
+    <div className="h-screen w-screen bg-brand-secondary font-sans">
+      <header className="flex items-center justify-center p-4">
         <Logo />
       </header>
-      <main className="register-container">
-        <h1>Register</h1>
+      <main className="flex flex-col items-center">
+        <h1 className="font-semibold text-5xl text-brand-main mt-8 mb-6">
+          Register
+          </h1>
         <form>
           <Input
-            className={`${email != "" ? "not-empty" : "empty"} ${
-              status.state == "failure" ? "error" : ""
-            }`}
+            className="mb-6"
             label="Email"
             id="email"
             type="email"
@@ -62,9 +65,7 @@ export default function Register() {
             onChange={updateEmail}
           />
           <Input
-            className={`${password != "" ? "not-empty" : "empty"} ${
-              status.state == "failure" ? "error" : ""
-            }`}
+            className="mb-6"
             label="Password"
             id="password"
             type="password"
@@ -73,50 +74,43 @@ export default function Register() {
             onChange={updatePassword}
           />
           <Input
-            className={`${repeatPassword != "" ? "not-empty" : "empty"} ${
-              status.state == "failure" ? "error" : ""
-            }`}
-            label="Repear your password"
+            className="mb-6"
+            label="Repear password"
             id="repeat-password"
             type="password"
-            placeholder="Repeat your password"
+            placeholder="Repeat password"
             value={repeatPassword}
             onChange={updateRepeatPassword}
           />
-          {status.state === "failure" ? (
-            <p className="error">{status.errorMessage}</p>
-          ) : null}
-          <ButtonPrimary onClick={registerSubmitHandle}>
+
+          <ButtonPrimary className="mb-6" onClick={registerSubmitHandle}>
             {status.state === "pending" ? <Loading /> : "Register"}
           </ButtonPrimary>
         </form>
 
         <ButtonSecondary
+          className="mb-6"
           fullwidth
           icon={iconGoogleObject}
           onClick={() => {
             //! TODO: Add social register functionality
           }}
         >
-          Signup using Google
+          Sign up using Google
         </ButtonSecondary>
-        <ButtonTertiary
-          fullwidth
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Already have an account? Log in
-        </ButtonTertiary>
+
+        <ButtonSecondary onClick={() => navigate("/login")}>
+          Login
+        </ButtonSecondary>
       </main>
-      <aside className="register">
+      <aside className="flex justify-center mt-8 ml-32 text-lg font-semibold text-brand-main">
         <ButtonTertiary
           className="s-align-end btn-skip"
           onClick={() => navigate("/")}
         >
-          Skip
+          Continue as guest
         </ButtonTertiary>
       </aside>
-    </>
+    </div>
   );
 }

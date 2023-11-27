@@ -7,11 +7,31 @@ import CafeCard from "../../components/Cafe/CafeCard";
 import SVGArrow from "../../components/Icons/SVGArrow";
 import SVGMenu from "../../components/Icons/SVGMenu";
 import SVGFilter from "../../components/Icons/SVGFilter";
+import MainNavigation from "../../components/Menu/MainNavigation";
 
 export default function Search() {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const [showGoBackArrow, setShowGoBackArrow] = useState<boolean>(false);
+
+  interface CoffeeType {
+    name: string,
+    isSelected: boolean
+  }
+  const [chips, setChips] = useState<CoffeeType[]>([
+    {
+      name: "Cappuccino",
+      isSelected: true
+    },
+    {
+      name: "Espresso",
+      isSelected: false
+    },
+    {
+      name: "Latte",
+      isSelected: false
+    }
+  ]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,55 +62,72 @@ export default function Search() {
   }
 
   return (
-    <>
-      <div className="navbar">
-        <header className="search">
+    <div className="w-screen bg-brand-light font-sans">
+      <div className="bg-brand-main pb-[16px] rounded-b-[8px]">
+        <header className="flex justify-between pt-[16px] px-[16px] gap-[8px]">
           <SVGArrow
             title="Go back to the previous page"
             onClick={() => {
               navigate(-1);
             }}
           />
-          <h1 className="size-p">Start a new day with a cup of coffee.</h1>
+          <h1 className="text-brand-secondary text-[14px] font-normal leading-5 w-full">Start a new day with a cup of coffee.</h1>
           <SVGMenu
             className="icon"
             title="Menu"
             onClick={() => {
-              //! TODO - Add menu
+              <MainNavigation />
             }}
           />
         </header>
         <Input
-          className={`${search != "" ? "not-empty" : "empty"}`}
+          className="m-[16px] flex gap-[8px]"
           label="Search your next coffee"
           id="search-coffee"
           type="text"
           placeholder="What shall it be?"
           value={search}
           onChange={updateSearch}
+          labelClass="bg-brand-main text-brand-secondary"
+          bgColor="bg-brand-main"
           trailingIcon={IconSearchObject}
-          isPrimary={false}
+          isBgDark={true}
         />
       </div>
 
-      <main className="search">
-        <div className="filters-container">
-          <Chip isSelected onClick={() => {}}>
-            Cappucino
-          </Chip>
-          <Chip onClick={() => {}}>Espresso</Chip>
-          <Chip onClick={() => {}}>Latte</Chip>
+      <main className="">
+        <div className="flex gap-[12px] w-full items-center pt-[16px] px-[16px] relative">
+        
+        {
+          chips.map((chip, index) =>
+            <Chip 
+            selected={chip.isSelected}
+            onClick={() =>
+              setChips(prev => {
+                const nextChips = [...prev]
+                nextChips[index] = {
+                  name: chip.name,
+                  isSelected: !chip.isSelected
+                }
+                return nextChips
+              })
+            }>
+              {chip.name}
+            </Chip>)
+        }
+
           <SVGFilter
-            className="filter-icon icon"
+            className="absolute end-[16px]"
             title="Filter the results"
-            color="var(--color-brown-dark)"
+            color="#222"
             onClick={() => {
               //! TODO - Add filter
             }}
           />
         </div>
-        <div className="results-container">
-          {cafeTestData.map((cafe) => {
+        
+        <div className="mt-[16px] grid grid-cols-2 pb-[16px] px-[16px] gap-[16px]">
+          {cafeTestData.map(cafe => {
             return (
               <CafeCard
                 cafeImage={cafe.cafeImage}
@@ -99,7 +136,7 @@ export default function Search() {
                 rating={cafe.rating}
                 isFavorite={cafe.isFavorite}
                 onClick={() => {
-                  //! TODO - Add navigation
+                  navigate("/404")
                 }}
               />
             );
@@ -116,7 +153,7 @@ export default function Search() {
           />
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -130,7 +167,7 @@ const IconSearchObject = {
 };
 
 const cafeTestData = [
-  {
+    {
     cafeImage: {
       src: "https://picsum.photos/200/300",
       title: "Cafe Image 1",
