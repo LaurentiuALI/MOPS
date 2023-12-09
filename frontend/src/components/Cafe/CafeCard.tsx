@@ -1,6 +1,7 @@
 import IconStar from "../../assets/icons/icon_rating_star.svg";
 import IconNotFavorite from "../../assets/icons/icon_heart_not_favorite.svg";
 import IconFavorite from "../../assets/icons/icon_heart_favorite.svg";
+import { useState } from "react";
 
 interface CafeCardProps {
   cafeImage: {
@@ -27,25 +28,32 @@ export default function CafeCard({
   isFavorite = false,
   onClick = () => {},
 }: CafeCardProps) {
+
+  const [toggleFavorite, setToggleFavorite] = useState(isFavorite);
+  
   return (
-    <div className="cafe-card">
+    <div className="bg-white rounded-[12px] p-[12px] relative" onClick={onClick}>
       <img
-        className="cafe-card-favorite-icon icon"
-        src={isFavorite ? IconFavorite : IconNotFavorite}
+        className="absolute end-[8px]"
+        height={24}
+        src={toggleFavorite ? IconFavorite : IconNotFavorite}
         title="favorite"
         alt="favorite"
-        onClick={onClick}
+        onClick={(event) => {
+          event.stopPropagation()
+          setToggleFavorite(prev => !prev)
+        }}
       />
       <img
-        className="cafe-card-image"
+        className="w-full rounded-[8px] h-[80px] "
         src={cafeImage.src}
         title={cafeImage.title}
         alt={cafeImage.alt}
       />
-      <p className="h4">{cafeName}</p>
-      <div className="cafe-card-details-container">
+      <div className="font-bold text-xl mb-2">{cafeName}</div>
+      <div className="flex justify-between">
         <p>{distance}m</p>
-        <p>
+        <p className="flex">
           <span>{rating.toFixed(1)}</span>
           <img src={IconStar} title="rating" alt="rating" />
         </p>

@@ -10,13 +10,15 @@ interface InputProps {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  labelClass?: string;
+  bgColor?: string;
   trailingIcon?: {
     src: string;
     title: string;
     alt: string;
     onClick?: () => void;
   };
-  isPrimary?: boolean;
+  isBgDark?: boolean;
 }
 
 export default function Input({
@@ -27,8 +29,10 @@ export default function Input({
   placeholder,
   value,
   onChange,
+  labelClass = "bg-brand-secondary ",
+  bgColor = "bg-brand-secondary",
   trailingIcon,
-  isPrimary = true,
+  isBgDark = false,
 }: InputProps) {
   const [inputType, setInputType] = useState(type);
 
@@ -42,13 +46,11 @@ export default function Input({
 
   return (
     <div
-      className={`${className ? className : ""} ${
-        isPrimary ? "input-primary" : "input-inverted"
-      }  input-container relative`}
+        className={`${className} relative flex  ${!isBgDark ? "border-brand-borderDark" : "border-brand-borderLight border-2 rounded-md mb-[16px]"}`}
     >
       {value != "" ? (
         <label
-          className="absolute text-lg top-[-15px] left-[10px] bg-brand-secondary text-brand-borderDark"
+          className={`${labelClass} absolute text-lg top-[-15px] left-[10px] px-[8px]`}
           htmlFor={id}
         >
           {label}
@@ -56,7 +58,14 @@ export default function Input({
       ) : null}
 
       <input
-        className="bg-brand-secondary border-2 border-brand-borderDark rounded-md h-14 w-[300px] placeholder:text-brand-borderDark p-2 focus:outline-none focus:border-brand-main"
+        className={` ${bgColor} 
+        ${!isBgDark && "border-2"}
+        rounded-md
+        w-full 
+        placeholder:text-brand-borderDark 
+        p-4 focus:outline-none 
+        focus:text-${labelClass}
+        focus:border-brand-main`}
         id={id}
         type={inputType}
         placeholder={placeholder}
@@ -67,7 +76,7 @@ export default function Input({
       />
       {type === "password" && value != "" ? (
         <img
-          className="absolute top-2 right-[12px]"
+          className="absolute top-4 right-[12px]"
           src={inputType === "password" ? IconHidePassword : IconShowPassword}
           title={inputType === "password" ? "Show Password" : "Hide Password"}
           alt={inputType === "password" ? "Show Password" : "Hide Password"}
@@ -76,7 +85,7 @@ export default function Input({
       ) : null}
       {trailingIcon ? (
         <img
-          className="trailing-icon icon"
+          className={`${isBgDark && "pr-[12px]"}`}
           src={trailingIcon.src}
           title={trailingIcon.title}
           alt={trailingIcon.alt}

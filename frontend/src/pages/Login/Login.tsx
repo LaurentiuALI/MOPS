@@ -34,7 +34,10 @@ export default function Login() {
   async function loginSubmitHandle(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setStatus({ state: "pending" });
-    navigate("/");
+    const timeout = setTimeout(() => {
+      navigate("/");
+      clearTimeout(timeout);
+    }, 1000);
   }
 
   return (
@@ -43,7 +46,7 @@ export default function Login() {
         <Logo />
       </header>
       <main className="flex flex-col items-center">
-        <h1 className="font-semibold text-5xl text-brand-main mt-12 mb-6">
+        <h1 className="font-semibold text-5xl text-brand-main mt-8 mb-6">
           Login
         </h1>
         <form>
@@ -82,16 +85,17 @@ export default function Login() {
         >
           Login using Google
         </ButtonSecondary>
+
         <ButtonSecondary
           fullwidth
           onClick={() => {
             navigate("/register");
           }}
         >
-          Sign Up
+          Register
         </ButtonSecondary>
       </main>
-      <aside className="flex justify-end mt-16 mr-4 text-lg font-semibold text-brand-main">
+      <aside className="flex justify-center mt-16 ml-32 text-lg font-semibold text-brand-main">
         <ButtonTertiary className="" onClick={() => navigate("/")}>
           Continue as guest
         </ButtonTertiary>

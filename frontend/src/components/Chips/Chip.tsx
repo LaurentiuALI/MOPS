@@ -1,20 +1,27 @@
 interface ChipProps {
   children: string;
-  isSelected?: boolean;
-  onClick: () => void;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
 export default function Chip({
   children,
-  isSelected = false,
+  selected = false,
   onClick = () => {},
 }: ChipProps) {
+
   return (
     <div
-      className={`chip ${isSelected ? "chip-active" : "chip-inactive"}`}
+      className={`${selected ? "bg-brand-main p-[8px] rounded-md" : ""}`}
       onClick={onClick}
     >
-      <p>{children}</p>
+      <p className={`text-[14px] 
+      leading-[130%] 
+      font-semibold
+      ${selected ? "text-brand-light" : "text-brand-dark"}`}
+      >
+        {children}
+        </p>
     </div>
   );
 }
