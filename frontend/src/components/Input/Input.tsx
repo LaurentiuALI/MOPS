@@ -1,34 +1,20 @@
-import { useState } from "react";
+import { type InputProps } from "./Types";
+
 import IconShowPassword from "../../assets/icons/icon_show_password.svg";
 import IconHidePassword from "../../assets/icons/icon_hide_password.svg";
 
-interface InputProps {
-  className?: string;
-  label: string;
-  id: string;
-  type: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  labelClass?: string;
-  bgColor?: string;
-  trailingIcon?: {
-    src: string;
-    title: string;
-    alt: string;
-    onClick?: () => void;
-  };
-  isBgDark?: boolean;
-}
+import { useState } from "react";
 
 export default function Input({
+  register,
+  required = false,
+  validationMessage = "Unknown error occured",
+  errors,
   className,
   label,
   id,
   type,
   placeholder,
-  value,
-  onChange,
   labelClass = "bg-brand-secondary ",
   bgColor = "bg-brand-secondary",
   trailingIcon,
@@ -46,18 +32,27 @@ export default function Input({
 
   return (
     <div
-        className={`${className} relative flex  ${!isBgDark ? "border-brand-borderDark" : "border-brand-borderLight border-2 rounded-md mb-[16px]"}`}
+      className={`${className} relative flex  ${
+        !isBgDark
+          ? "border-brand-borderDark"
+          : "border-brand-borderLight border-2 rounded-md mb-[16px]"
+      }`}
     >
-      {value != "" ? (
-        <label
-          className={`${labelClass} absolute text-lg top-[-15px] left-[10px] px-[8px]`}
-          htmlFor={id}
-        >
-          {label}
-        </label>
-      ) : null}
+      <label
+        className={`${labelClass} absolute text-lg top-[-15px] left-[10px] px-[8px]
+        ${!errors ? "text-brand-main" : "text-brand-red"}`}
+        htmlFor={id}
+      >
+        {label}
+      </label>
 
       <input
+        {...register(label, {
+          required: {
+            value: required,
+            message: validationMessage,
+          },
+        })}
         className={` ${bgColor} 
         ${!isBgDark && "border-2"}
         rounded-md
@@ -69,12 +64,9 @@ export default function Input({
         id={id}
         type={inputType}
         placeholder={placeholder}
-        value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          onChange(e.target.value);
-        }}
       />
-      {type === "password" && value != "" ? (
+
+      {type === "password" && (
         <img
           className="absolute top-4 right-[12px]"
           src={inputType === "password" ? IconHidePassword : IconShowPassword}
@@ -82,7 +74,7 @@ export default function Input({
           alt={inputType === "password" ? "Show Password" : "Hide Password"}
           onClick={togglePasswordVisibility}
         />
-      ) : null}
+      )}
       {trailingIcon ? (
         <img
           className={`${isBgDark && "pr-[12px]"}`}
