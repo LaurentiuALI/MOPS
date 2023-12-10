@@ -28,7 +28,7 @@ export default function Login() {
   const { errors } = formState;
   const onSubmit = (data: ILoginValues) => {
     axios
-      .post(`http://localhost:8081/api/users/login`, data)
+      .post(`${import.meta.env.VITE_URL}users/login`, data)
       .then((res) => {
         toast("Logged in succesfully!", {
           className: "bg-green-500 p-2 opacity-75 text-white",

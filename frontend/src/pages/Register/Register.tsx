@@ -49,7 +49,7 @@ export default function Register() {
     delete user["Repeat password"];
 
     axios
-      .post(`http://localhost:8081/api/users/register`, user)
+      .post(`${import.meta.env.VITE_URL}users/register`, user)
       .then((res) => {
         toast("Account created succesfully!", {
           className: "bg-green-500 p-2 opacity-75 text-white",
