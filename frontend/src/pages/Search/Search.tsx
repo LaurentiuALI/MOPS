@@ -1,5 +1,5 @@
 import IconSearch from "../../assets/icons/icon_search.svg";
-import Input from "../Register/Input/Input";
+import Input from "../Search/Input/Input";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Chip from "../../components/Chips/Chip";
