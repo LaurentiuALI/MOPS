@@ -33,6 +33,7 @@ export default function Login() {
         toast("Logged in succesfully!", {
           className: "bg-green-500 p-2 opacity-75 text-white",
         });
+        navigate("/");
         return res.data;
       })
       .catch((error) => {
@@ -41,7 +42,6 @@ export default function Login() {
         });
         console.log(error);
       });
-    navigate("/");
   };
 
   const onClick = () => {

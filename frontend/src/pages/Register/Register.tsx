@@ -55,6 +55,7 @@ export default function Register() {
           className: "bg-green-500 p-2 opacity-75 text-white",
         });
         console.log(res.data);
+        navigate("/login");
         return res.data;
       })
       .catch((error) => {
@@ -63,7 +64,6 @@ export default function Register() {
         });
         console.log(error);
       });
-    navigate("/login");
   };
 
   const onClick = () => {
