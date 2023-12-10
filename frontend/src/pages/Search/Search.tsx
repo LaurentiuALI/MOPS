@@ -8,6 +8,7 @@ import SVGArrow from "../../components/Icons/SVGArrow";
 import SVGMenu from "../../components/Icons/SVGMenu";
 import SVGFilter from "../../components/Icons/SVGFilter";
 import MainNavigation from "../../components/Menu/MainNavigation";
+import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -136,7 +137,7 @@ export default function Search() {
                 rating={cafe.rating}
                 isFavorite={cafe.isFavorite}
                 onClick={() => {
-                  navigate("/404")
+                  navigate("./1")
                 }}
               />
             );
@@ -169,7 +170,7 @@ const IconSearchObject = {
 const cafeTestData = [
     {
     cafeImage: {
-      src: "https://picsum.photos/200/300",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 1",
       alt: "Cafe 1",
     },
@@ -180,7 +181,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/301",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 2",
       alt: "Cafe 2",
     },
@@ -191,7 +192,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/302",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 3",
       alt: "Cafe 3",
     },
@@ -202,7 +203,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/300",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 1",
       alt: "Cafe 1",
     },
@@ -213,7 +214,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/301",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 2",
       alt: "Cafe 2",
     },
@@ -224,7 +225,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/302",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 3",
       alt: "Cafe 3",
     },
@@ -236,7 +237,7 @@ const cafeTestData = [
   // Additional items
   {
     cafeImage: {
-      src: "https://picsum.photos/200/303",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 4",
       alt: "Cafe 4",
     },
@@ -247,7 +248,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/304",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 5",
       alt: "Cafe 5",
     },
@@ -258,7 +259,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/305",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 6",
       alt: "Cafe 6",
     },
@@ -269,7 +270,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/306",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 7",
       alt: "Cafe 7",
     },
@@ -280,7 +281,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/307",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 8",
       alt: "Cafe 8",
     },
@@ -291,7 +292,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/308",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 9",
       alt: "Cafe 9",
     },
@@ -302,7 +303,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/309",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 10",
       alt: "Cafe 10",
     },
@@ -313,7 +314,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/310",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 11",
       alt: "Cafe 11",
     },
@@ -324,7 +325,7 @@ const cafeTestData = [
   },
   {
     cafeImage: {
-      src: "https://picsum.photos/200/311",
+      src: dummyCoffeeShopImage,
       title: "Cafe Image 12",
       alt: "Cafe 12",
     },
