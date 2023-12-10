@@ -1,13 +1,13 @@
 import { UseFormRegister, Path } from "react-hook-form";
-import { type IFormValues } from "../../pages/Register/Types";
+import { type ILoginValues } from "../Types";
 
 export interface InputProps {
-  register: UseFormRegister<IFormValues>;
+  register: UseFormRegister<ILoginValues>;
   required?: boolean;
   validationMessage?: string;
   errors?: string;
   className?: string;
-  label: Path<IFormValues>;
+  label: Path<ILoginValues>;
   id: string;
   type: string;
   placeholder: string;

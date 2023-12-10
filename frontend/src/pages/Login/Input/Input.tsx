@@ -1,14 +1,12 @@
 import { type InputProps } from "./Types";
 
-import IconShowPassword from "../../assets/icons/icon_show_password.svg";
-import IconHidePassword from "../../assets/icons/icon_hide_password.svg";
+import IconShowPassword from "../../../assets/icons/icon_show_password.svg";
+import IconHidePassword from "../../../assets/icons/icon_hide_password.svg";
 
 import { useState } from "react";
 
 export default function Input({
   register,
-  required = false,
-  validationMessage = "Unknown error occured",
   errors,
   className,
   label,
@@ -47,12 +45,7 @@ export default function Input({
       </label>
 
       <input
-        {...register(label, {
-          required: {
-            value: required,
-            message: validationMessage,
-          },
-        })}
+        {...register(label)}
         className={` ${bgColor} 
         ${!isBgDark && "border-2"}
         rounded-md

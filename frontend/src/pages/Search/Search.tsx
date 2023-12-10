@@ -1,5 +1,5 @@
 import IconSearch from "../../assets/icons/icon_search.svg";
-import Input from "../../components/Input/Input";
+import Input from "../Register/Input/Input";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Chip from "../../components/Chips/Chip";
@@ -15,22 +15,22 @@ export default function Search() {
   const [showGoBackArrow, setShowGoBackArrow] = useState<boolean>(false);
 
   interface CoffeeType {
-    name: string,
-    isSelected: boolean
+    name: string;
+    isSelected: boolean;
   }
   const [chips, setChips] = useState<CoffeeType[]>([
     {
       name: "Cappuccino",
-      isSelected: true
+      isSelected: true,
     },
     {
       name: "Espresso",
-      isSelected: false
+      isSelected: false,
     },
     {
       name: "Latte",
-      isSelected: false
-    }
+      isSelected: false,
+    },
   ]);
 
   useEffect(() => {
@@ -71,12 +71,14 @@ export default function Search() {
               navigate(-1);
             }}
           />
-          <h1 className="text-brand-secondary text-[14px] font-normal leading-5 w-full">Start a new day with a cup of coffee.</h1>
+          <h1 className="text-brand-secondary text-[14px] font-normal leading-5 w-full">
+            Start a new day with a cup of coffee.
+          </h1>
           <SVGMenu
             className="icon"
             title="Menu"
             onClick={() => {
-              <MainNavigation />
+              <MainNavigation />;
             }}
           />
         </header>
@@ -97,24 +99,23 @@ export default function Search() {
 
       <main className="">
         <div className="flex gap-[12px] w-full items-center pt-[16px] px-[16px] relative">
-        
-        {
-          chips.map((chip, index) =>
-            <Chip 
-            selected={chip.isSelected}
-            onClick={() =>
-              setChips(prev => {
-                const nextChips = [...prev]
-                nextChips[index] = {
-                  name: chip.name,
-                  isSelected: !chip.isSelected
-                }
-                return nextChips
-              })
-            }>
+          {chips.map((chip, index) => (
+            <Chip
+              selected={chip.isSelected}
+              onClick={() =>
+                setChips((prev) => {
+                  const nextChips = [...prev];
+                  nextChips[index] = {
+                    name: chip.name,
+                    isSelected: !chip.isSelected,
+                  };
+                  return nextChips;
+                })
+              }
+            >
               {chip.name}
-            </Chip>)
-        }
+            </Chip>
+          ))}
 
           <SVGFilter
             className="absolute end-[16px]"
@@ -125,9 +126,9 @@ export default function Search() {
             }}
           />
         </div>
-        
+
         <div className="mt-[16px] grid grid-cols-2 pb-[16px] px-[16px] gap-[16px]">
-          {cafeTestData.map(cafe => {
+          {cafeTestData.map((cafe) => {
             return (
               <CafeCard
                 cafeImage={cafe.cafeImage}
@@ -136,7 +137,7 @@ export default function Search() {
                 rating={cafe.rating}
                 isFavorite={cafe.isFavorite}
                 onClick={() => {
-                  navigate("/404")
+                  navigate("/404");
                 }}
               />
             );
@@ -167,7 +168,7 @@ const IconSearchObject = {
 };
 
 const cafeTestData = [
-    {
+  {
     cafeImage: {
       src: "https://picsum.photos/200/300",
       title: "Cafe Image 1",

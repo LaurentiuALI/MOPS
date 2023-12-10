@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-simple-toasts";
 
 import Logo from "../../components/Logo/Logo";
-import Input from "../../components/Input/Input";
+import Input from "./Input/Input";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import ButtonTertiary from "../../components/Buttons/ButtonTertiary";
 import ButtonSecondary from "../../components/Buttons/ButtonSecondary";
@@ -11,7 +11,6 @@ import ButtonSecondary from "../../components/Buttons/ButtonSecondary";
 import { IRegisterRequest, type IFormValues } from "./Types";
 
 import { useForm } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
@@ -39,7 +38,7 @@ const schema = yup.object({
 export default function Register() {
   const navigate = useNavigate();
 
-  const { register, control, handleSubmit, formState } = useForm<IFormValues>({
+  const { register, handleSubmit, formState } = useForm<IFormValues>({
     resolver: yupResolver(schema),
   });
 
@@ -52,7 +51,6 @@ export default function Register() {
     axios
       .post(`http://localhost:8081/api/users/register`, user)
       .then((res) => {
-        navigate("/login");
         toast("Account created succesfully!", {
           className: "bg-green-500 p-2 opacity-75 text-white",
         });
@@ -65,6 +63,7 @@ export default function Register() {
         });
         console.log(error);
       });
+    navigate("/login");
   };
 
   const onClick = () => {
@@ -161,7 +160,6 @@ export default function Register() {
             Register
           </ButtonPrimary>
         </form>
-        <DevTool control={control} />
 
         <ButtonSecondary onClick={() => navigate("/login")}>
           Login
