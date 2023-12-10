@@ -3,20 +3,30 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import { userRouter } from "./routes/userRoute";
 import { coffeeShopRouter } from "./routes/coffeeShopRoute";
-
+import cors from "cors";
 //For env File
 config();
 
 const app: Application = express();
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://mops-tau.vercel.app/",
+      "https://mops-laurentiuali.vercel.app/",
+    ],
+  })
+);
+
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(req.method + " " + req.path);
   next();
-})
+});
 
-app.use('/api', userRouter);
-app.use('/api', coffeeShopRouter);
+app.use("/api", userRouter);
+app.use("/api", coffeeShopRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");
