@@ -11,11 +11,7 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://mops-tau.vercel.app/",
-      "https://mops-laurentiuali.vercel.app/",
-    ],
+    origin: "*",
   })
 );
 
