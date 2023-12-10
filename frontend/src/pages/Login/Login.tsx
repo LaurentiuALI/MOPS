@@ -1,44 +1,66 @@
-import { useState } from "react";
-import type { RequestStatus } from "../../../types/RequestStatus";
-import IconGoogle from "../../assets/icons/icon_google.svg";
 import Logo from "../../components/Logo/Logo";
-import Input from "../../components/Input/Input";
+import Input from "./Input/Input";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import ButtonTertiary from "../../components/Buttons/ButtonTertiary";
 import ButtonSecondary from "../../components/Buttons/ButtonSecondary";
-import Loading from "../../components/Loading/Loading";
-import { useNavigate } from "react-router-dom";
-import React from "react";
 
-const iconGoogleObject = {
-  src: IconGoogle,
-  title: "Google Logo",
-  altText: "Google Logo",
-};
+import { type ILoginValues } from "./Types";
+
+import { useNavigate } from "react-router-dom";
+
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
+import { yupResolver } from "@hookform/resolvers/yup/src/yup.js";
+import * as yup from "yup";
+import toast from "react-simple-toasts";
+import axios from "axios";
+
+const schema = yup.object({
+  Username: yup.string().required("Username is required"),
+  Password: yup.string().required("Password is required"),
+});
 
 export default function Login() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<RequestStatus>({ state: "idle" });
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const { register, formState, control, handleSubmit } = useForm<ILoginValues>({
+    resolver: yupResolver(schema),
+  });
+  const { errors } = formState;
+  const onSubmit = (data: ILoginValues) => {
+    axios
+      .post(`${import.meta.env.VITE_URL}users/login`, data)
+      .then((res) => {
+        toast("Logged in succesfully!", {
+          className: "bg-green-500 p-2 opacity-75 text-white",
+        });
+        navigate("/");
+        return res.data;
+      })
+      .catch((error) => {
+        toast("Something went wrong!", {
+          className: "bg-brand-red p-2 opacity-75 text-white",
+        });
+        console.log(error);
+      });
+  };
 
-  function updateEmail(newValue: string) {
-    if (status.state == "failure") setStatus({ state: "idle" });
-    setEmail(newValue);
-  }
-  function updatePassword(newValue: string) {
-    if (status.state == "failure") setStatus({ state: "idle" });
-    setPassword(newValue);
-  }
+  const onClick = () => {
+    if (errors.Password?.message != null) {
+      toast(errors.Password?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 2,
+      });
+    }
 
-  async function loginSubmitHandle(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setStatus({ state: "pending" });
-    const timeout = setTimeout(() => {
-      navigate("/");
-      clearTimeout(timeout);
-    }, 1000);
-  }
+    if (errors.Username?.message != null) {
+      toast(errors.Username?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 2,
+      });
+    }
+  };
 
   return (
     <div className="h-screen w-screen bg-brand-secondary font-sans">
@@ -49,43 +71,34 @@ export default function Login() {
         <h1 className="font-semibold text-5xl text-brand-main mt-8 mb-6">
           Login
         </h1>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
+            register={register}
+            errors={errors.Username?.message}
             className="mb-6"
-            label="Email"
-            id="email"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={updateEmail}
+            label="Username"
+            id="username"
+            type="text"
+            placeholder="Username"
           />
-
           <Input
+            register={register}
+            errors={errors.Password?.message}
             className="mb-6"
             label="Password"
             id="password"
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={updatePassword}
           />
+
           <ButtonTertiary className="mb-6" onClick={() => navigate("/404")}>
             Forgot password?
           </ButtonTertiary>
-          <ButtonPrimary className="mb-6" onClick={loginSubmitHandle}>
-            {status.state === "pending" ? <Loading /> : "Login"}
+          <ButtonPrimary className="mb-6" onClick={onClick}>
+            Login
           </ButtonPrimary>
+          <DevTool control={control} />
         </form>
-        <ButtonSecondary
-          className="mb-6"
-          icon={iconGoogleObject}
-          onClick={() => {
-            //! TODO: Add social login functionality
-          }}
-        >
-          Login using Google
-        </ButtonSecondary>
-
         <ButtonSecondary
           fullwidth
           onClick={() => {

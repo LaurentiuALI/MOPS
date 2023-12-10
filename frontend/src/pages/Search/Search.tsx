@@ -1,6 +1,6 @@
 import IconSearch from "../../assets/icons/icon_search.svg";
-import Input from "../../components/Input/Input";
-import { useEffect,  useState } from "react";
+import Input from "../Search/Input/Input";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Chip from "../../components/Chips/Chip";
 import CafeCard from "../../components/Cafe/CafeCard";
@@ -17,22 +17,22 @@ export default function Search() {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
 
   interface CoffeeType {
-    name: string,
-    isSelected: boolean
+    name: string;
+    isSelected: boolean;
   }
   const [chips, setChips] = useState<CoffeeType[]>([
     {
       name: "Cappuccino",
-      isSelected: true
+      isSelected: true,
     },
     {
       name: "Espresso",
-      isSelected: false
+      isSelected: false,
     },
     {
       name: "Latte",
-      isSelected: false
-    }
+      isSelected: false,
+    },
   ]);
 
   useEffect(() => {
@@ -105,7 +105,6 @@ export default function Search() {
             isBgDark={true}
           />
         </div>
-
         <main>
           <div className="flex gap-[12px] w-full items-center pt-[16px] px-[16px] relative">
 

@@ -1,49 +1,102 @@
-import { RequestStatus } from "../../../types/RequestStatus";
-import IconGoogle from "../../assets/icons/icon_google.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+
+import toast from "react-simple-toasts";
+
 import Logo from "../../components/Logo/Logo";
-import Input from "../../components/Input/Input";
+import Input from "./Input/Input";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
-import Loading from "../../components/Loading/Loading";
 import ButtonTertiary from "../../components/Buttons/ButtonTertiary";
 import ButtonSecondary from "../../components/Buttons/ButtonSecondary";
 
-const iconGoogleObject = {
-  src: IconGoogle,
-  title: "Google Logo",
-  altText: "Google Logo",
-};
+import { IRegisterRequest, type IFormValues } from "./Types";
+
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import axios from "axios";
+
+const schema = yup.object({
+  Username: yup
+    .string()
+    .required("Username is required")
+    .min(4, "Username must be at least 4 characters long."),
+  Email: yup
+    .string()
+    .email("Email format is not valid")
+    .matches(/@[^.]*\./, "Email format is not valid")
+    .required("Email is required"),
+  Password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters."),
+  "Repeat password": yup
+    .string()
+    .required("Repeat Password is required")
+    .oneOf([yup.ref("Password")], "Passwords do not match."),
+});
 
 export default function Register() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<RequestStatus>({ state: "idle" });
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [repeatPassword, setRepeatpassword] = useState<string>("");
 
-  function updateEmail(newValue: string) {
-    if (status.state == "failure") setStatus({ state: "idle" });
-    setEmail(newValue);
-  }
-  function updatePassword(newValue: string) {
-    if (status.state == "failure") setStatus({ state: "idle" });
-    setPassword(newValue);
-  }
-  function updateRepeatPassword(newValue: string) {
-    if (status.state == "failure") setStatus({ state: "idle" });
-    setRepeatpassword(newValue);
-  }
+  const { register, handleSubmit, formState } = useForm<IFormValues>({
+    resolver: yupResolver(schema),
+  });
 
-  async function registerSubmitHandle(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setStatus({ state: "pending" });
-    const timeout = setTimeout(() => {
-      navigate("/");
-      clearTimeout(timeout);
-    }, 1000);
-    
-  }
+  const { errors } = formState;
+
+  const onSubmit = (data: IFormValues) => {
+    const user: IRegisterRequest = { ...data, Role: "User" };
+    delete user["Repeat password"];
+
+    axios
+      .post(`${import.meta.env.VITE_URL}users/register`, user)
+      .then((res) => {
+        toast("Account created succesfully!", {
+          className: "bg-green-500 p-2 opacity-75 text-white",
+        });
+        console.log(res.data);
+        navigate("/login");
+        return res.data;
+      })
+      .catch((error) => {
+        toast("Something went wrong!", {
+          className: "bg-brand-red p-2 opacity-75 text-white",
+        });
+        console.log(error);
+      });
+  };
+
+  const onClick = () => {
+    if (errors.Password?.message != null) {
+      toast(errors.Password?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 3,
+      });
+    }
+
+    if (errors["Repeat password"]?.message != null) {
+      toast(errors["Repeat password"]?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 3,
+      });
+    }
+    if (errors.Email?.message != null) {
+      toast(errors.Email?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 3,
+      });
+    }
+    if (errors.Username?.message != null) {
+      toast(errors.Username?.message, {
+        className: "bg-brand-red p-2 opacity-75 text-white",
+        clickClosable: true,
+        maxVisibleToasts: 3,
+      });
+    }
+  };
 
   return (
     <div className="h-screen w-screen bg-brand-secondary font-sans">
@@ -53,51 +106,60 @@ export default function Register() {
       <main className="flex flex-col items-center">
         <h1 className="font-semibold text-5xl text-brand-main mt-8 mb-6">
           Register
-          </h1>
-        <form>
+        </h1>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
+            register={register}
+            errors={errors.Username?.message}
+            className="mb-6"
+            label="Username"
+            id="username"
+            type="text"
+            placeholder="Username"
+          />
+
+          <Input
+            register={register}
+            errors={errors.Email?.message}
             className="mb-6"
             label="Email"
             id="email"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={updateEmail}
           />
+
           <Input
+            register={register}
+            errors={errors.Nickname?.message}
+            className="mb-6"
+            label="Nickname"
+            id="nickname"
+            type="text"
+            placeholder="Nickname ( optional )"
+          />
+
+          <Input
+            register={register}
+            errors={errors.Password?.message}
             className="mb-6"
             label="Password"
             id="password"
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={updatePassword}
           />
           <Input
+            register={register}
+            errors={errors["Repeat password"]?.message}
             className="mb-6"
-            label="Repear password"
-            id="repeat-password"
+            label="Repeat password"
+            id="repeatPassword"
             type="password"
             placeholder="Repeat password"
-            value={repeatPassword}
-            onChange={updateRepeatPassword}
           />
-
-          <ButtonPrimary className="mb-6" onClick={registerSubmitHandle}>
-            {status.state === "pending" ? <Loading /> : "Register"}
+          <ButtonPrimary className="mb-6" onClick={onClick}>
+            Register
           </ButtonPrimary>
         </form>
-
-        <ButtonSecondary
-          className="mb-6"
-          fullwidth
-          icon={iconGoogleObject}
-          onClick={() => {
-            //! TODO: Add social register functionality
-          }}
-        >
-          Sign up using Google
-        </ButtonSecondary>
 
         <ButtonSecondary onClick={() => navigate("/login")}>
           Login
