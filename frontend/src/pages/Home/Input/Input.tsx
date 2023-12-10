@@ -12,6 +12,7 @@ export default function Input({
   type,
   value,
   onChange,
+  onClick,
   placeholder,
   labelClass = "bg-brand-secondary ",
   bgColor = "bg-brand-secondary",
@@ -56,6 +57,7 @@ export default function Input({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onChange(e.target.value);
         }}
+        onClick={onClick}
         id={id}
         type={inputType}
         placeholder={placeholder}

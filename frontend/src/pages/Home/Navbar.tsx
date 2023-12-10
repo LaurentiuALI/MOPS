@@ -30,6 +30,9 @@ const Navbar = () => {
         id="search-coffee"
         type="text"
         onChange={() => {}}
+        onClick={() => {
+          navigate("/coffeeshops");
+        }}
         placeholder="What shall it be?"
         labelClass="bg-brand-main text-brand-secondary"
         bgColor="bg-brand-main"
