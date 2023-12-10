@@ -2,6 +2,7 @@ import express, { Express, Request, Response, Application } from "express";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import { userRouter } from "./routes/userRoute";
+import { coffeeShopRouter } from "./routes/coffeeShopRoute";
 
 //For env File
 config();
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api', userRouter);
+app.use('/api', coffeeShopRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");
