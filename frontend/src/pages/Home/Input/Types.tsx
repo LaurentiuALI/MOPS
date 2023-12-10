@@ -4,7 +4,7 @@ export interface InputProps {
   type: string;
   label: string;
   value?: string;
-  onChange?: (value: string) => void;
+  onChange: (value: string) => void;
   placeholder: string;
   labelClass?: string;
   bgColor?: string;
