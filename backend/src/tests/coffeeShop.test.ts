@@ -1,12 +1,17 @@
 import express from "express";
 import request from "supertest";
 import { coffeeShopRouter } from "../routes/coffeeShopRoute";
-import CoffeeShop from "../models/coffeeShopModel"; 
+import { getAllCoffeeShops } from "../controllers/coffeeShopController";
+import CoffeeShop from '../models/coffeeShopModel';
+import { get } from "mongoose";
 
 // Mock the CoffeeShop model with a specific implementation
 jest.mock('../models/coffeeShopModel', () => ({
     create: jest.fn().mockResolvedValue({}),
     findOne: jest.fn().mockResolvedValue({}),
+    findOneAndUpdate: jest.fn().mockResolvedValue({}),
+    findOneAndDelete: jest.fn().mockResolvedValue({}),
+    find: jest.fn().mockResolvedValue([]),
 }));
 
 const app = express();
@@ -37,7 +42,6 @@ describe('addCoffeeShop', () => {
     });
 });
 
-
 describe('getCoffeeShopByName', () => {
     it('should return a coffee shop if it exists', async () => {
         const mockCoffeeShop = {
@@ -50,5 +54,56 @@ describe('getCoffeeShopByName', () => {
             .get('/api/coffeeShops/TestCoffeeShop'); 
 
         expect(response.status).toBe(200);
+    });
+});
+
+describe("getAllCoffeeShops", () => {
+    it("should return all coffee shops", async () => {
+        getAllCoffeeShops !== undefined;
+    });
+});
+
+describe("updateCoffeeShop", () => {
+    it("should update a coffee shop and return a success message", async () => {
+        const mockCoffeeShop = {
+            Name: 'TestCoffeeShop'
+        };
+
+        const updatedCoffeeShop = {
+            Name: 'TestCoffeeShop',
+            Geolocation: [123, 456], 
+            ManagerId: 'manager123',
+            Coffees: ['Espresso', 'Latte'],
+            Address: '123 Test St',
+            Availabilities: ['Morning', 'Afternoon'],
+            ServiceType: 'DineIn', 
+            Description: 'A cozy place for coffee',
+            Photos: ['photo1.jpg', 'photo2.jpg']
+        };
+
+        CoffeeShop.findOneAndUpdate(mockCoffeeShop, updatedCoffeeShop);
+
+        const response = await request(app)
+            .put('/api/coffeeShops/TestCoffeeShop')
+            .send(updatedCoffeeShop);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({"message": "CoffeeShop updated successfully"});
+    });
+});
+
+describe("deleteCoffeeShop", () => {
+    it("should delete a coffee shop and return a success message", async () => {
+        const mockCoffeeShop = {
+            Name: 'TestCoffeeShop'
+        };
+
+        CoffeeShop.findOneAndDelete(mockCoffeeShop);
+
+        const response = await request(app)
+            .delete('/api/coffeeShops/TestCoffeeShop');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({"message": "CoffeeShop deleted successfully"});
     });
 });
