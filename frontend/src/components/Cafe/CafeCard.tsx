@@ -50,7 +50,7 @@ export default function CafeCard({
         title={cafeImage.title}
         alt={cafeImage.alt}
       />
-      <div className="font-bold text-xl mb-2">{cafeName}</div>
+      <div className="font-bold text-[16px] leading-[130%] my-[8px]">{cafeName}</div>
       <div className="flex justify-between">
         <p>{distance}m</p>
         <p className="flex">

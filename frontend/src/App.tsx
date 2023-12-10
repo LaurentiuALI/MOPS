@@ -6,6 +6,7 @@ import Search from "./pages/Search/Search";
 import Root from "./pages/Root";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
+import CoffeeShop from "./pages/CoffeeShop/CoffeeShop";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "/coffeeshops", element: <Search /> },
+      { path: "/coffeeshops", element: <Search />},
+      { path: "/coffeeshops/:id", element: <CoffeeShop />},
     ],
   },
 ]);
