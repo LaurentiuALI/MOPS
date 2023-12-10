@@ -1,11 +1,28 @@
-import "./App.css";
+// import "./app.css";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import Search from "./pages/Search/Search";
+import Root from "./pages/Root";
+import ErrorPage from "./pages/ErrorPage";
+import Home from "./pages/Home";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+      { path: "/coffeeshops", element: <Search /> },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <h1> Welcome to MOPS Project</h1>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
