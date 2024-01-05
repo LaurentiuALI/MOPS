@@ -1,7 +1,7 @@
 import express from "express";
 import request from "supertest";
-import { get } from "mongoose";
-
+import Coffee from '../models/coffeeModel';
+import { coffeeRouter } from "../routes/coffeeRoute";
 
 jest.mock('../models/coffeeModel', () => ( {
     create: jest.fn().mockResolvedValue({}),
@@ -13,7 +13,7 @@ jest.mock('../models/coffeeModel', () => ( {
 
 const app = express();
 app.use(express.json());
-app.use('/api');
+app.use('/api', coffeeRouter);
 
 describe('addCoffee', () => {
     it('should create a new coffee and return a success message', async () => {
@@ -44,7 +44,7 @@ describe('addCoffee', () => {
             .send(newCoffee);
 
         expect(response.status).toBe(400);
-        expect(response.body).toEqual({"message": "Please provide all fields"});
+        expect(response.body).toEqual({"message": "Please provide coffee's name"});
     });
 });
 
