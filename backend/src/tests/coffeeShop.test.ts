@@ -57,6 +57,21 @@ describe('getCoffeeShopByName', () => {
     });
 });
 
+describe('getCoffeeShopByCoffeeName', () => {
+    it('should return a coffee shop if it exists', async () => {
+        const mockCoffeeShop = {
+            Name: 'TestCoffeeShop'
+        };
+
+        CoffeeShop.findOne(mockCoffeeShop);
+
+        const response = await request(app)
+            .get('/api/coffeeShops/TestCoffeeShop'); 
+
+        expect(response.status).toBe(200);
+    });
+});
+
 describe("getAllCoffeeShops", () => {
     it("should return all coffee shops", async () => {
         getAllCoffeeShops !== undefined;
@@ -105,5 +120,11 @@ describe("deleteCoffeeShop", () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({"message": "CoffeeShop deleted successfully"});
+    });
+    it("should return an error if the coffee shop name is missing", async () => {
+        const response = await request(app)
+            .delete('/api/coffeeShops/');
+
+        expect(response.status).toBe(404);
     });
 });
