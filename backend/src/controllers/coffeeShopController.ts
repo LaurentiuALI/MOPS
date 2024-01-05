@@ -6,18 +6,18 @@ import { Request, Response } from 'express';
 export const addCoffeeShop = async (req: Request, res: Response) => {
     try {
         const { Name, Geolocation, ManagerId, Coffees, Address,
-                     Availabilities, ServiceType, Description, Photos } = req.body;
+            Availabilities, ServiceType, Description, Photos } = req.body;
 
         // Create a new coffeeShop
         const coffeeShop = await CoffeeShop.create({
             Name,
-            Geolocation, 
-            ManagerId, 
-            Coffees, 
+            Geolocation,
+            ManagerId,
+            Coffees,
             Address,
-            Availabilities, 
-            ServiceType, 
-            Description, 
+            Availabilities,
+            ServiceType,
+            Description,
             Photos
         });
 
@@ -28,7 +28,7 @@ export const addCoffeeShop = async (req: Request, res: Response) => {
     }
 };
 
-// Get a single cofffeshop by name
+// Get a single coffeshop by name
 export const getCoffeeShopByName = async (req: Request, res: Response) => {
     try {
         const coffeeShop = await CoffeeShop.findOne({ Name: req.params.name });
@@ -53,13 +53,28 @@ export const getAllCoffeeShops = async (res: Response) => {
     }
 };
 
+// Get CoffeeShops by coffee name
+export const getCoffeeShopByCoffeeName = async (req: Request, res: Response) => {
+    try {
+        const coffeeShop = await CoffeeShop.find({ "Coffees": req.params.coffeeName });
+        if (!coffeeShop) {
+            return res.status(404).json({ message: "CoffeeShops not found" });
+        }
+        res.status(200).json(coffeeShop);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching CoffeeShops", error });
+    }
+}
+
 // Update user
 export const updateCoffeeShop = async (req: Request, res: Response) => {
     try {
-        const { Geolocation, ManagerId, Coffees, Address, Availabilities, 
-            ServiceType, Description, Photos} = req.body;
-        let updateData: { Geolocation?: [number]; ManagerId?: string; Coffees?: [string]; Address?: string;
-                 Availabilities?: [string]; ServiceType?: string; Description?: string; Photos?: [string] } = {};
+        const { Geolocation, ManagerId, Coffees, Address, Availabilities,
+            ServiceType, Description, Photos } = req.body;
+        let updateData: {
+            Geolocation?: [number]; ManagerId?: string; Coffees?: [string]; Address?: string;
+            Availabilities?: [string]; ServiceType?: string; Description?: string; Photos?: [string]} = {};
 
         if (Geolocation !== undefined) {
             updateData.Geolocation = Geolocation;
@@ -95,10 +110,10 @@ export const updateCoffeeShop = async (req: Request, res: Response) => {
         if (!updatedCoffeeShop) {
             return res.status(404).json({ message: "CoffeeShop not found" });
         }
-        res.json({ message: "CoffeeShop updated successfully"});
+        res.json({ message: "CoffeeShop updated successfully" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error updating CoffeeShop"});
+        res.status(500).json({ message: "Error updating CoffeeShop" });
     }
 };
 
