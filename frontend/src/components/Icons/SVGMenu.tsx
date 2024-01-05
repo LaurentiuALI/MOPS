@@ -8,6 +8,8 @@ export default function SVGMenu({
 }: CustomIconProps) {
   return (
     <svg
+    
+    data-testid="menu button"
       className={className}
       width="26"
       height="24"

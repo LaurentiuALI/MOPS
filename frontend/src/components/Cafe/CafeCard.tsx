@@ -17,22 +17,20 @@ interface CafeCardProps {
 }
 
 export default function CafeCard({
-  cafeImage = {
-    src: "https://picsum.photos/200",
-    title: "cafe",
-    alt: "cafe",
-  },
-  cafeName = "Magic Brews",
-  distance = 240,
-  rating = 4.5,
-  isFavorite = false,
-  onClick = () => {},
+  cafeImage,
+  cafeName,
+  distance,
+  rating,
+  isFavorite,
+  onClick,
 }: CafeCardProps) {
-
   const [toggleFavorite, setToggleFavorite] = useState(isFavorite);
-  
+
   return (
-    <div className="bg-white rounded-[12px] p-[12px] relative" onClick={onClick}>
+    <div
+      className="bg-white rounded-[12px] p-[12px] relative"
+      onClick={onClick}
+    >
       <img
         className="absolute end-[8px]"
         height={24}
@@ -40,8 +38,8 @@ export default function CafeCard({
         title="favorite"
         alt="favorite"
         onClick={(event) => {
-          event.stopPropagation()
-          setToggleFavorite(prev => !prev)
+          event.stopPropagation();
+          setToggleFavorite((prev) => !prev);
         }}
       />
       <img
@@ -50,7 +48,9 @@ export default function CafeCard({
         title={cafeImage.title}
         alt={cafeImage.alt}
       />
-      <div className="font-bold text-[16px] leading-[130%] my-[8px]">{cafeName}</div>
+      <div className="font-bold text-[16px] leading-[130%] my-[8px]">
+        {cafeName}
+      </div>
       <div className="flex justify-between">
         <p>{distance}m</p>
         <p className="flex">

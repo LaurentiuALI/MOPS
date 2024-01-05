@@ -9,19 +9,19 @@ export default function Chip({
   selected = false,
   onClick = () => {},
 }: ChipProps) {
-
   return (
     <div
       className={`${selected ? "bg-brand-main p-[8px] rounded-md" : ""}`}
       onClick={onClick}
     >
-      <p className={`text-[14px] 
+      <p
+        className={`text-[14px] 
       leading-[130%] 
       font-semibold
       ${selected ? "text-brand-light" : "text-brand-dark"}`}
       >
         {children}
-        </p>
+      </p>
     </div>
   );
 }

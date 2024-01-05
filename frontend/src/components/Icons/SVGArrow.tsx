@@ -1,13 +1,14 @@
-import CustomIconProps from '../../../types/CustomIconProps';
+import CustomIconProps from "../../../types/CustomIconProps";
 
 export default function SVGArrow({
   className,
-  color = '#FAE7D1',
+  color = "#FAE7D1",
   title,
   onClick,
 }: CustomIconProps) {
   return (
     <svg
+      data-testid="back button"
       className={className}
       width="24"
       height="24"

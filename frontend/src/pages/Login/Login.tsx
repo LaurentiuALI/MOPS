@@ -71,7 +71,7 @@ export default function Login() {
         <h1 className="font-semibold text-5xl text-brand-main mt-8 mb-6">
           Login
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate aria-label="form">
           <Input
             register={register}
             errors={errors.Username?.message}
