@@ -1,6 +1,5 @@
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import { describe, expect, it, afterEach } from "vitest";
-import { BrowserRouter } from "react-router-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import Input from "./Input";
 
 describe("it should make sure Input is working", () => {
