@@ -49,14 +49,7 @@ export default function Search() {
     }).then((data)=>{
       console.log(data);
       
-    });
-    // axios.get(`${import.meta.env.VITE_URL}coffees`).then((response) => {
-    //   setCoffees(response.data);
-    // });
-
-    // console.log(coffees);
-    // console.log(coffeeShops);
-    
+    });    
   }, []);
 
   useEffect(() => {

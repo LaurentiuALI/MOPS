@@ -114,6 +114,7 @@ function CoffeeShop() {
   }
   const [coffeeShopInfo, setCoffeeShopInfo] = useState<coffeeDataTypes>();
   const [reviews, setReviews] = useState<reviewInterface[] | null>();
+  const [shopRating, setShopRating] = useState(0)
 
   const param = useParams();
   useEffect(() => {
@@ -124,10 +125,16 @@ function CoffeeShop() {
       const coffeeShopReviewsResult = await axios.get(
         `${import.meta.env.VITE_URL}reviews`
       )
+      const coffeeShopRating = await axios.get(
+        `${import.meta.env.VITE_URL}reviews/rating/${param.coffeeName}`
+      ).catch((error)=>{
+        console.log(error);
+      })
 
       if (coffeeShopDataResults) {
-        setCoffeeShopInfo(() => {
+        setCoffeeShopInfo((prev) => {
             return {
+              ...prev,
               name: coffeeShopDataResults.data.Name,
               coffees: coffeeShopDataResults.data.Coffees,
               address: coffeeShopDataResults.data.Address,
@@ -144,6 +151,12 @@ function CoffeeShop() {
           return review.CoffeeShopName == param.coffeeName
         })
         setReviews(coffeeShopReviews);
+      }
+
+      if(coffeeShopRating){
+        setShopRating(()=>{
+          return Number((coffeeShopRating.data.AverageRating as number).toFixed(1))
+        })
       }
 
     }
@@ -196,10 +209,14 @@ function CoffeeShop() {
 
           <div className="flex justify-between px-[16px] pt-[16px]">
             <div className="flex gap-[4px] items-center">
+              {shopRating >0 ? 
+              <>
               <p className="text-brand-borderDark text-[12px] font-normal leading-[150%]">
-                {dummyData.rating}
-              </p>
-              <SVGStar title="rating icon" />
+              {shopRating} 
+            </p><SVGStar title="rating icon" /></>
+            :
+            null}
+             
             </div>
 
             <div className="flex gap-[8px] items-center">
