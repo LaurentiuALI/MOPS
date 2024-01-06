@@ -12,8 +12,6 @@ import CoffeeCard from "../../components/CoffeeCard/CoffeeCard";
 import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
-import { cleanup } from "@testing-library/react";
-import { string } from "yup";
 
 const dummyData = {
   coffeShopName: "Magic Brew",

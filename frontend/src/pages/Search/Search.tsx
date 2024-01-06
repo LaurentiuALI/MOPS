@@ -88,7 +88,7 @@ export default function Search() {
     name: string;
     isSelected: boolean;
   }
-  const [chips, setChips] = useState<CoffeeType[]>([
+  const [chips] = useState<CoffeeType[]>([
     {
       name: "Cappuccino",
       isSelected: false,
