@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MarkerCoffee from "../../assets/icons/Marker_Coffee.svg";
 import Navbar from "./Navbar";
 import axios from "axios";
+import { useLocationStore } from "../../store/locationStore";
 
 interface coffeeShop {
   Name: string;
@@ -17,6 +18,8 @@ interface coffeeShop {
 }
 
 const Home = () => {
+  const { latitude, longitude, updateCoordinates } = useLocationStore();
+
   const [markers, setMarkers] = useState<JSX.Element[]>([]);
   const addMarker = (lat: number, long: number) => {
     setMarkers((markers) => [
@@ -36,10 +39,6 @@ const Home = () => {
     });
   }, []);
 
-  const [coord, setCoord] = useState<{ lat: number; lng: number }>({
-    lat: 44.4355355,
-    lng: 26.0995867,
-  });
   const key = import.meta.env.VITE_API_KEY as string;
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: key,
@@ -47,10 +46,7 @@ const Home = () => {
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(function (position) {
-      setCoord({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
+      updateCoordinates(position.coords.latitude, position.coords.longitude);
     });
   } else {
     console.log("Not Available");
@@ -65,7 +61,7 @@ const Home = () => {
           <Navbar />
           <GoogleMap
             mapContainerClassName="h-screen w-screen absolute"
-            center={coord}
+            center={{ lat: latitude, lng: longitude }}
             zoom={18}
           >
             {...markers}
