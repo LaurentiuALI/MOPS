@@ -12,8 +12,9 @@ import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
 import axios from "axios";
 import getDistance from "geolib/es/getPreciseDistance";
 import { useLocationStore } from "../../store/locationStore";
+// import CoffeeShop from "../CoffeeShop/CoffeeShop";
 
-interface coffeeShop {
+type coffeeShop = {
   Name: string;
   Geolocation: [number, number];
   ManagerId: number;
@@ -43,8 +44,45 @@ export default function Search() {
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_URL}coffeeShops`).then((response) => {
       setCoffeeShops(response.data);
+    }).then((data)=>{
+      console.log(data);
+      
     });
+    // axios.get(`${import.meta.env.VITE_URL}coffees`).then((response) => {
+    //   setCoffees(response.data);
+    // });
+
+    // console.log(coffees);
+    // console.log(coffeeShops);
+    
   }, []);
+
+  useEffect(() => {
+
+    const fetchData = async ()=>{
+      const result =  await axios.get(
+        `${import.meta.env.VITE_URL}coffeeShops/byCoffee/${search}`
+      ).catch((error)=>{
+        console.log(error);
+      })
+      
+      if (result){
+        setCoffeeShops(result.data)
+      }
+    }
+
+    try {
+      if (search.length > 0){
+        fetchData()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    return ()=>{
+    }
+    
+  },[search]);
 
   interface CoffeeType {
     name: string;
@@ -120,37 +158,40 @@ export default function Search() {
         </div>
         <main>
           <div className="flex gap-[12px] w-full items-center pt-[16px] px-[16px] relative">
-            {chips.map((chip, index) => (
+            {chips.map((chip) => (
               <Chip
-                selected={chip.isSelected}
+                selected={chip.name == search}
+                // onClick={() => {
+                //   if (!chip.isSelected)
+                //     axios
+                //       .get(
+                //         `${import.meta.env.VITE_URL}coffeeShops/byCoffee/${
+                //           chip.name
+                //         }`
+                //       )
+                //       .then((response) => {
+                //         console.log(response.data);
+                //         setCoffeeShops(response.data);
+                //       });
+                //   else if (chip.isSelected) {
+                //     axios
+                //       .get(`${import.meta.env.VITE_URL}coffeeShops`)
+                //       .then((response) => {
+                //         console.log(response.data);
+                //         setCoffeeShops(response.data);
+                //       });
+                //   }
+                //   setChips((prev) => {
+                //     const nextChips = [...prev];
+                //     nextChips[index] = {
+                //       name: chip.name,
+                //       isSelected: !chip.isSelected,
+                //     };
+                //     return nextChips;
+                //   });
+                // }}
                 onClick={() => {
-                  if (!chip.isSelected)
-                    axios
-                      .get(
-                        `${import.meta.env.VITE_URL}coffeeShops/byCoffee/${
-                          chip.name
-                        }`
-                      )
-                      .then((response) => {
-                        console.log(response.data);
-                        setCoffeeShops(response.data);
-                      });
-                  else if (chip.isSelected) {
-                    axios
-                      .get(`${import.meta.env.VITE_URL}coffeeShops`)
-                      .then((response) => {
-                        console.log(response.data);
-                        setCoffeeShops(response.data);
-                      });
-                  }
-                  setChips((prev) => {
-                    const nextChips = [...prev];
-                    nextChips[index] = {
-                      name: chip.name,
-                      isSelected: !chip.isSelected,
-                    };
-                    return nextChips;
-                  });
+                  updateSearch(chip.name)
                 }}
               >
                 {chip.name}
@@ -158,7 +199,9 @@ export default function Search() {
             ))}
             <Chip
               selected={distanceSet}
-              onClick={() => setDistanceSet(!distanceSet)}
+              onClick={() => {
+                setDistanceSet(!distanceSet)
+              }}
             >
               500m
             </Chip>
@@ -192,7 +235,7 @@ export default function Search() {
                       rating={Math.floor(Math.random() * 5) + 1}
                       isFavorite={false}
                       onClick={() => {
-                        navigate("./1");
+                        navigate(`./${cafe.Name}`);
                         document.body.scrollTop = 0;
                         document.documentElement.scrollTop = 0;
                       }}
@@ -207,7 +250,7 @@ export default function Search() {
                       rating={Math.floor(Math.random() * 5) + 1}
                       isFavorite={false}
                       onClick={() => {
-                        navigate("./1");
+                        navigate(`./${cafe.Name}`);
                         document.body.scrollTop = 0;
                         document.documentElement.scrollTop = 0;
                       }}

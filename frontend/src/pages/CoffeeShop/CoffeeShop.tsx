@@ -6,10 +6,14 @@ import SVGStar from "../../components/Icons/SVGStar";
 import SVGHeart from "../../components/Icons/SVGHeart";
 import SVGShare from "../../components/Icons/SVGShare";
 import SVGMap from "../../components/Icons/SVGMap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chip from "../../components/Chips/Chip";
 import CoffeeCard from "../../components/CoffeeCard/CoffeeCard";
 import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
+import { useParams } from 'react-router-dom';
+import axios from "axios";
+import { cleanup } from "@testing-library/react";
+import { string } from "yup";
 
 const dummyData = {
   coffeShopName: "Magic Brew",
@@ -91,6 +95,55 @@ function CoffeeShop() {
 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
+  interface coffeeDataTypes {
+    name: string,
+    coffees: [],
+    address: string,
+    availabilities: [],
+    serviceType: string,
+    description: string | null,
+    photos: [],
+  }
+  const [coffeeShopInfo, setCoffeeShopInfo] = useState<coffeeDataTypes>();
+
+  const param = useParams();
+  useEffect(() => {
+    async function fetchData() {
+      const result = await axios.get(
+        `${import.meta.env.VITE_URL}coffeeShops/${param.coffeeName}`
+      )
+
+      if (result) {
+        setCoffeeShopInfo(() => {
+            return {
+              name: result.data.Name,
+              coffees: result.data.Coffees,
+              address: result.data.Address,
+              availabilities: result.data.Availabilities,
+              serviceType: result.data.ServiceType,
+              description: result.data.Description,
+              photos: result.data.Photos
+            }
+        });
+
+        console.log(coffeeShopInfo);
+      }
+    }
+
+    try {
+      fetchData();
+
+    } catch(error) {
+      console.log(error);
+      
+    }
+
+
+
+
+    return () => {}
+  }, []);
+
   return (
     <>
       <MainNavigation
@@ -107,7 +160,7 @@ function CoffeeShop() {
               }}
             />
             <h1 className="text-brand-secondary text-[32px] font-normal leading-5 w-full">
-              {dummyData.coffeShopName}
+              {coffeeShopInfo?.name || dummyData.coffeShopName}
             </h1>
             <SVGMenu
               className="icon"
@@ -118,7 +171,7 @@ function CoffeeShop() {
             />
           </header>
           <p className="text-brand-secondary text-[14px] font-normal p-[16px]">
-            {dummyData.address}
+            {coffeeShopInfo?.address || dummyData.address}
           </p>
 
           <img
@@ -157,12 +210,12 @@ function CoffeeShop() {
           <div className="px-[16px] flex flex-col gap-[12px] pb-[16px]">
             {selectedChip == 0 && (
               <div className="grid grid-cols-2 gap-[16px]">
-                {dummyData.products.map((product) => {
+                {coffeeShopInfo?.coffees.map((product) => {
                   return (
                     <CoffeeCard
-                      coffeeName={product.title}
-                      price={product.price}
-                      rating={product.rating}
+                      coffeeName={product}
+                      price={5.00}
+                      rating={4.2}
                     />
                   );
                 })}

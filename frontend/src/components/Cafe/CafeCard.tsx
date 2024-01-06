@@ -26,6 +26,7 @@ export default function CafeCard({
 }: CafeCardProps) {
   const [toggleFavorite, setToggleFavorite] = useState(isFavorite);
 
+
   return (
     <div
       className="bg-white rounded-[12px] p-[12px] relative"
