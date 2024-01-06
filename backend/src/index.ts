@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import { userRouter } from "./routes/userRoute";
 import { coffeeShopRouter } from "./routes/coffeeShopRoute";
 import { coffeeRouter } from "./routes/coffeeRoute";
+import { reviewRouter } from "./routes/reviewRoute";
 import cors from "cors";
 
 //For env File
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use("/api", userRouter);
 app.use("/api", coffeeShopRouter);
 app.use("/api", coffeeRouter);
+app.use("/api", reviewRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");

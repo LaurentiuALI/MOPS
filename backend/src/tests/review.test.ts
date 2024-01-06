@@ -1,7 +1,8 @@
 import express from "express";
 import request from "supertest";
-import { get } from "mongoose";
-import mongoose from "mongoose";
+import { reviewRouter } from "../routes/reviewRoute";
+import { getAllReviews } from "../controllers/reviewController";
+import Review from '../models/reviewModel';
 
 jest.mock('../models/reviewModel', () => ({
     create: jest.fn().mockResolvedValue({}),
@@ -16,7 +17,7 @@ jest.mock('../models/reviewModel', () => ({
 
 const app = express();
 app.use(express.json());
-app.use('/api');
+app.use('/api', reviewRouter);
 
 describe('addReview', () => {
     it('should create a new review and return a success message', async () => {
