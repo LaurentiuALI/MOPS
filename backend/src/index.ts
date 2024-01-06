@@ -25,6 +25,7 @@ app.use((req, res, next) => {
 
 app.use("/api", userRouter);
 app.use("/api", coffeeShopRouter);
+app.use("/api", coffeeRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");
