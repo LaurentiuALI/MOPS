@@ -135,7 +135,26 @@ export default function Search() {
             {chips.map((chip, index) => (
               <Chip
                 selected={chip.isSelected}
-                onClick={() =>
+                onClick={() => {
+                  if (!chip.isSelected)
+                    axios
+                      .get(
+                        `${import.meta.env.VITE_URL}coffeeShops/byCoffee/${
+                          chip.name
+                        }`
+                      )
+                      .then((response) => {
+                        console.log(response.data);
+                        setCoffeeShops(response.data);
+                      });
+                  else if (chip.isSelected) {
+                    axios
+                      .get(`${import.meta.env.VITE_URL}coffeeShops`)
+                      .then((response) => {
+                        console.log(response.data);
+                        setCoffeeShops(response.data);
+                      });
+                  }
                   setChips((prev) => {
                     const nextChips = [...prev];
                     nextChips[index] = {
@@ -143,8 +162,8 @@ export default function Search() {
                       isSelected: !chip.isSelected,
                     };
                     return nextChips;
-                  })
-                }
+                  });
+                }}
               >
                 {chip.name}
               </Chip>
@@ -176,7 +195,7 @@ export default function Search() {
                     longitude: cafe.Geolocation[1],
                   }
                 );
-                if (distanceSet && distance < 580)
+                if (distanceSet && distance < 500)
                   return (
                     <CafeCard
                       cafeImage={cafeImage}
