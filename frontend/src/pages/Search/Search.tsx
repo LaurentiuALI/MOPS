@@ -24,12 +24,6 @@ interface coffeeShop {
   Description: string;
   Photos: [string];
 }
-interface coffee {
-  Name: string;
-  Ingredients: [string];
-  Description: string;
-  Allergens: [string];
-}
 
 export default function Search() {
   const navigate = useNavigate();
@@ -38,7 +32,6 @@ export default function Search() {
 
   const [distanceSet, setDistanceSet] = useState(false);
   const [coffeeShops, setCoffeeShops] = useState<[coffeeShop]>();
-  const [coffees, setCoffees] = useState<[coffee]>();
 
   const { latitude, longitude } = useLocationStore();
   const cafeImage = {
@@ -51,12 +44,7 @@ export default function Search() {
     axios.get(`${import.meta.env.VITE_URL}coffeeShops`).then((response) => {
       setCoffeeShops(response.data);
     });
-    axios.get(`${import.meta.env.VITE_URL}coffees`).then((response) => {
-      setCoffees(response.data);
-    });
-
-    console.log(coffees);
-  }, [coffees]);
+  }, []);
 
   interface CoffeeType {
     name: string;
