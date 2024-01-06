@@ -12,7 +12,8 @@ export default {
           borderDark: "#9B8571",
           borderLight: "#F4CFA4",
           red: "#CA4545",
-          black: "#2B1905"
+          black: "#2B1905",
+          white: "#FFF"
         },
       },
     },

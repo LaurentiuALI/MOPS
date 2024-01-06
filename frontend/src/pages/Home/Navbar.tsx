@@ -1,9 +1,10 @@
 import Input from "./Input/Input";
 import SVGArrow from "../../components/Icons/SVGArrow";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="w-screen bg-brand-main pb-[16px] rounded-b-[8px] absolute z-10">
@@ -11,6 +12,11 @@ const Navbar = () => {
         <SVGArrow
           title="Go back to the previous page"
           onClick={() => {
+            if (location.pathname == "/") {
+              navigate("/login")
+              return;
+            }
+
             navigate(-1);
           }}
         />

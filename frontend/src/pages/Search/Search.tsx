@@ -34,6 +34,8 @@ export default function Search() {
   const [distanceSet, setDistanceSet] = useState(false);
   const [coffeeShops, setCoffeeShops] = useState<[coffeeShop]>();
 
+  const [listOfChipsSize, setListOfChipsSize] = useState(14); // 14px
+
   const { latitude, longitude } = useLocationStore();
   const cafeImage = {
     src: dummyCoffeeShopImage,
@@ -47,14 +49,7 @@ export default function Search() {
     }).then((data)=>{
       console.log(data);
       
-    });
-    // axios.get(`${import.meta.env.VITE_URL}coffees`).then((response) => {
-    //   setCoffees(response.data);
-    // });
-
-    // console.log(coffees);
-    // console.log(coffeeShops);
-    
+    });    
   }, []);
 
   useEffect(() => {
@@ -94,11 +89,35 @@ export default function Search() {
       isSelected: false,
     },
     {
-      name: "Espresso",
+      name: "Latte",
       isSelected: false,
     },
     {
-      name: "Latte",
+      name: "Mocha",
+      isSelected: false,
+    },
+    {
+      name: "Cold Brew",
+      isSelected: false,
+    },
+    {
+      name: "Americano",
+      isSelected: false,
+    },
+    {
+      name: "Irish Coffee",
+      isSelected: false,
+    },
+    {
+      name: "Flat White",
+      isSelected: false,
+    },
+    {
+      name: "Hazelnut Macchiato",
+      isSelected: false,
+    },
+    {
+      name: "Black Coffee",
       isSelected: false,
     },
   ]);
@@ -113,7 +132,7 @@ export default function Search() {
         isOpen={dialogIsOpen}
         setIsOpen={() => setDialogIsOpen(false)}
       />
-      <div className="w-screen bg-brand-light font-sans">
+      <div className="w-screen h-full bg-brand-light font-sans">
         <div className="bg-brand-main pb-[16px] rounded-b-[8px]">
           <header className="flex justify-between pt-[16px] px-[16px] gap-[8px]">
             <SVGArrow
@@ -157,9 +176,11 @@ export default function Search() {
           />
         </div>
         <main>
-          <div className="flex gap-[12px] w-full items-center pt-[16px] px-[16px] relative">
-            {chips.map((chip) => (
+          <div className={`flex flex-wrap gap-[12px] w-full items-center pt-[16px] px-[16px] relative overflow-hidden h-${listOfChipsSize}`}>
+            {chips.map((chip,index) => (
               <Chip
+              key={`chip-${index}`}
+              className="min-w-[25%]"
                 selected={chip.name == search}
                 // onClick={() => {
                 //   if (!chip.isSelected)
@@ -207,11 +228,14 @@ export default function Search() {
             </Chip>
 
             <SVGFilter
-              className="absolute end-[16px]"
+              className="absolute end-[16px] top-[20px]"
               title="Filter the results"
               color="#222"
               onClick={() => {
-                //! TODO - Add filter
+                setListOfChipsSize( prev => {
+                  if (prev == 14) return 13;
+                  else return 14;
+                })
               }}
             />
           </div>
