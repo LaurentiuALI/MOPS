@@ -2,15 +2,18 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import ButtonSecondary from "../../components/Buttons/ButtonSecondary";
 import axios from "axios";
+import {reviewInterface} from "./CoffeeShop";
 
 interface formStateProps {
     listOfProducts: string[] | undefined,
-    coffeeShopName: string
+    coffeeShopName: string,
+    addReview: (newReview: reviewInterface) => void
 }
 
 function CoffeeReviewForm({
     listOfProducts,
-    coffeeShopName
+    coffeeShopName,
+    addReview
 }: formStateProps) {
 
     const [formData, setFormData] = useState({
@@ -59,9 +62,20 @@ function CoffeeReviewForm({
              Rating: formData.stars,
              Notes: formData.body
         }).then((response)=>{
+            const currentDate = new Date();
+
+            const createdReview = {
+                CoffeeShopName: coffeeShopName,
+                CoffeeName: formData.coffee,
+                Username:'anonim',
+                Rating: formData.stars,
+                Notes: formData.body,
+                TimeStamp: `${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2, '0')}-${currentDate.getDay().toString().padStart(2, '0')}`
+            }
+            addReview(createdReview)
             resetForm() 
             setResponseMessage(response?.data.message)
-        })
+        })        
     };
     function resetForm(){
         setFormData({

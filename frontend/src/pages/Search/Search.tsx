@@ -8,11 +8,17 @@ import SVGArrow from "../../components/Icons/SVGArrow";
 import SVGMenu from "../../components/Icons/SVGMenu";
 import SVGFilter from "../../components/Icons/SVGFilter";
 import MainNavigation from "../../components/Menu/MainNavigation";
-import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
 import axios from "axios";
 import getDistance from "geolib/es/getPreciseDistance";
 import { useLocationStore } from "../../store/locationStore";
-// import CoffeeShop from "../CoffeeShop/CoffeeShop";
+import Loading from "../../components/Loading/Loading";
+
+import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
+import coffeeMachines from "../../assets/images/coffee_machines_and_barista.jpg";
+import modernCafe from "../../assets/images/modern_cafe.jpg";
+import retroCafe from "../../assets/images/retro_cafe.jpg";
+import tableAtCafe from "../../assets/images/table_at_cafe.jpg";
+import barista from "../../assets/images/barista.jpg";
 
 type coffeeShop = {
   Name: string;
@@ -35,20 +41,24 @@ export default function Search() {
   const [coffeeShops, setCoffeeShops] = useState<[coffeeShop]>();
 
   const [listOfChipsSize, setListOfChipsSize] = useState(14); // 14px
+  const [dataIsLoading, setDataIsLoading] = useState(true);
 
   const { latitude, longitude } = useLocationStore();
-  const cafeImage = {
-    src: dummyCoffeeShopImage,
-    title: "Cafe Image 1",
-    alt: "Cafe 1",
-  };
+  
+  const dummyPictureOfCafe = [
+    dummyCoffeeShopImage,
+    coffeeMachines,
+    modernCafe,
+    retroCafe,
+    tableAtCafe,
+    barista
+  ]
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_URL}coffeeShops`).then((response) => {
       setCoffeeShops(response.data);
     }).then((data)=>{
       console.log(data);
-      
     });    
   }, []);
 
@@ -74,9 +84,12 @@ export default function Search() {
       console.log(error);
     }
 
-    return ()=>{
-    }
+    setDataIsLoading(false);
     
+
+    // cleanup function
+    return ()=>{}
+
   },[search]);
 
   interface CoffeeType {
@@ -132,7 +145,7 @@ export default function Search() {
         isOpen={dialogIsOpen}
         setIsOpen={() => setDialogIsOpen(false)}
       />
-      <div className="w-screen h-full bg-brand-light font-sans">
+      <div className="w-screen h-full bg-brand-secondary font-sans">
         <div className="bg-brand-main pb-[16px] rounded-b-[8px]">
           <header className="flex justify-between pt-[16px] px-[16px] gap-[8px]">
             <SVGArrow
@@ -175,7 +188,7 @@ export default function Search() {
             isBgDark={true}
           />
         </div>
-        <main>
+        <main className="h-full bg-brand-secondary">
           <div className={`flex flex-wrap gap-[12px] w-full items-center pt-[16px] px-[16px] relative overflow-hidden h-${listOfChipsSize}`}>
             {chips.map((chip,index) => (
               <Chip
@@ -241,7 +254,10 @@ export default function Search() {
           </div>
 
           <div className="mt-[16px] grid grid-cols-2 pb-[16px] px-[16px] gap-[16px]">
-            {coffeeShops &&
+
+            {dataIsLoading && <Loading />}
+
+            {!dataIsLoading && coffeeShops &&
               coffeeShops.map((cafe) => {
                 const distance = getDistance(
                   { latitude: latitude, longitude: longitude },
@@ -253,10 +269,17 @@ export default function Search() {
                 if (distanceSet && distance < 500)
                   return (
                     <CafeCard
-                      cafeImage={cafeImage}
+                      key={`${cafe.Name}${Math.random}`}
+                      cafeImage={
+
+                        {
+                          src: dummyPictureOfCafe[Math.floor(Math.random() * (dummyPictureOfCafe.length-1))],
+                          alt: "Coffee Shop Interior",
+                          title: "Main Image for Coffee Shop"
+                        }
+                      }
                       cafeName={cafe.Name}
                       distance={distance}
-                      rating={Math.floor(Math.random() * 5) + 1}
                       isFavorite={false}
                       onClick={() => {
                         navigate(`./${cafe.Name}`);
@@ -268,10 +291,17 @@ export default function Search() {
                 else if (!distanceSet)
                   return (
                     <CafeCard
-                      cafeImage={cafeImage}
+                      key={`${cafe.Name}${Math.random}`}
+                      cafeImage={
+
+                        {
+                          src: dummyPictureOfCafe[Math.floor(Math.random() * (dummyPictureOfCafe.length-1))],
+                          alt: "Coffee Shop Interior",
+                          title: "Main Image for Coffee Shop"
+                        }
+                      }
                       cafeName={cafe.Name}
                       distance={distance}
-                      rating={Math.floor(Math.random() * 5) + 1}
                       isFavorite={false}
                       onClick={() => {
                         navigate(`./${cafe.Name}`);

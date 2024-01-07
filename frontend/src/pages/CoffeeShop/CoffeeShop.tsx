@@ -14,6 +14,16 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import CoffeeReviewForm from "./CoffeeReviewForm";
 
+import americano from "../../assets/images/coffees/americano.png";
+import black_coffee from "../../assets/images/coffees/black_coffee.png";
+import cappuccino from "../../assets/images/coffees/cappuccino.png";
+import hazelnut_machiato from "../../assets/images/coffees/hazelnut_machiato.png";
+import cold_brew from "../../assets/images/coffees/cold_brew.png";
+import flat_white from "../../assets/images/coffees/flat_white.png";
+import irish_coffee from "../../assets/images/coffees/irish_coffee.png";
+import latte from "../../assets/images/coffees/latte.png";
+import mocha from "../../assets/images/coffees/mocha.png";
+
 const dummyData = {
   coffeShopName: "Magic Brew",
   address: "2118 Thornridge Cir. Syracuse, Connecticut 35624",
@@ -86,7 +96,19 @@ const dummyData = {
   ],
 };
 
-interface reviewInterface {
+const coffeesAvailable = {
+  "Americano": americano,
+  "Black Coffee": black_coffee,
+  "Cappuccino": cappuccino,
+  "Hazelnut Macchiato": hazelnut_machiato,
+  "Cold Brew": cold_brew,
+  "Flat White": flat_white,
+  "Irish Coffee": irish_coffee,
+  "Latte": latte,
+  "Mocha": mocha
+}
+
+export interface reviewInterface {
   CoffeeShopName: string,
   CoffeeName: string,
   Username: string,
@@ -122,13 +144,15 @@ function CoffeeShop() {
       const coffeeShopDataResults = await axios.get(
         `${import.meta.env.VITE_URL}coffeeShops/${param.coffeeName}`
       )
+
       const coffeeShopReviewsResult = await axios.get(
         `${import.meta.env.VITE_URL}reviews`
       )
+
       const coffeeShopRating = await axios.get(
         `${import.meta.env.VITE_URL}reviews/rating/${param.coffeeName}`
       ).catch((error)=>{
-        console.log(error);
+        error
       })
 
       if (coffeeShopDataResults) {
@@ -153,12 +177,11 @@ function CoffeeShop() {
         setReviews(coffeeShopReviews);
       }
 
-      if(coffeeShopRating){
+      if(coffeeShopRating) {
         setShopRating(()=>{
           return Number((coffeeShopRating.data.AverageRating as number).toFixed(1))
         })
       }
-
     }
 
     try {
@@ -169,7 +192,18 @@ function CoffeeShop() {
     }
 
     return () => {}
-  }, []);
+  }, [param.coffeeName]);
+
+  function addReview(newReview: reviewInterface) {
+    setReviews((prev) => {
+      if (prev != undefined) {
+        const existingReviews = [...prev];
+        existingReviews.unshift(newReview);
+        return existingReviews
+      }
+    })
+  }
+
 
   return (
     <>
@@ -209,7 +243,7 @@ function CoffeeShop() {
 
           <div className="flex justify-between px-[16px] pt-[16px]">
             <div className="flex gap-[4px] items-center">
-              {shopRating >0 ? 
+              {shopRating > 0 ? 
               <>
               <p className="text-brand-borderDark text-[12px] font-normal leading-[150%]">
               {shopRating} 
@@ -246,10 +280,11 @@ function CoffeeShop() {
                 {coffeeShopInfo?.coffees.map((product,index) => {
                   return (
                     <CoffeeCard
-                    key={`coffeeCard-${index}`}
+                      key={`coffeeCard-${index}`}
                       coffeeName={product}
                       price={5.00}
                       rating={4.2}
+                      imgSrc={coffeesAvailable[product]}
                     />
                   );
                 })}
@@ -290,7 +325,7 @@ function CoffeeShop() {
 
             {selectedChip == 3 && (
               <>
-                <CoffeeReviewForm listOfProducts={coffeeShopInfo?.coffees} coffeeShopName={coffeeShopInfo!.name}/>
+                <CoffeeReviewForm listOfProducts={coffeeShopInfo?.coffees} coffeeShopName={coffeeShopInfo!.name} addReview={addReview} />
 
                 <h2 className="font-bold ">
                   Read what our customers have to say about us

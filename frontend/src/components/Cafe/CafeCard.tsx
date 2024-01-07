@@ -1,7 +1,8 @@
 import IconStar from "../../assets/icons/icon_rating_star.svg";
 import IconNotFavorite from "../../assets/icons/icon_heart_not_favorite.svg";
 import IconFavorite from "../../assets/icons/icon_heart_favorite.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface CafeCardProps {
   cafeImage: {
@@ -11,7 +12,7 @@ interface CafeCardProps {
   };
   cafeName: string;
   distance: number;
-  rating: number;
+  rating?: number,
   isFavorite: boolean;
   onClick: () => void;
 }
@@ -20,16 +21,34 @@ export default function CafeCard({
   cafeImage,
   cafeName,
   distance,
-  rating,
   isFavorite,
   onClick,
 }: CafeCardProps) {
+
   const [toggleFavorite, setToggleFavorite] = useState(isFavorite);
+  const [existingRating, setExistingRating] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const calculatedRating = await axios.get(
+        `${import.meta.env.VITE_URL}reviews/rating/${cafeName}`
+      ).catch((error)=>{
+        error
+      })
+
+      if (calculatedRating) {
+        setExistingRating(calculatedRating.data.AverageRating);
+      }
+    }
+
+      fetchData();
+      return () => {}
+  },[cafeName]);
 
 
   return (
     <div
-      className="bg-white rounded-[12px] p-[12px] relative"
+      className="bg-white rounded-[12px] p-[12px] relative flex flex-col justify-between"
       onClick={onClick}
     >
       <img
@@ -55,8 +74,8 @@ export default function CafeCard({
       <div className="flex justify-between">
         <p>{distance}m</p>
         <p className="flex">
-          <span>{rating.toFixed(1)}</span>
-          <img src={IconStar} title="rating" alt="rating" />
+          <span>{existingRating != 0 && existingRating.toFixed(1)}</span>
+          {existingRating !=0 && <img src={IconStar} title="rating" alt="rating" />}
         </p>
       </div>
     </div>
