@@ -12,6 +12,7 @@ interface CafeCardProps {
   };
   cafeName: string;
   distance: number;
+  rating?: number,
   isFavorite: boolean;
   onClick: () => void;
 }
@@ -25,7 +26,7 @@ export default function CafeCard({
 }: CafeCardProps) {
 
   const [toggleFavorite, setToggleFavorite] = useState(isFavorite);
-  const [rating, setRating] = useState(0);
+  const [existingRating, setExistingRating] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ export default function CafeCard({
       })
 
       if (calculatedRating) {
-        setRating(calculatedRating.data.AverageRating);
+        setExistingRating(calculatedRating.data.AverageRating);
       }
     }
 
@@ -73,8 +74,8 @@ export default function CafeCard({
       <div className="flex justify-between">
         <p>{distance}m</p>
         <p className="flex">
-          <span>{rating != 0 && rating.toFixed(1)}</span>
-          {rating !=0 && <img src={IconStar} title="rating" alt="rating" />}
+          <span>{existingRating != 0 && existingRating.toFixed(1)}</span>
+          {existingRating !=0 && <img src={IconStar} title="rating" alt="rating" />}
         </p>
       </div>
     </div>
