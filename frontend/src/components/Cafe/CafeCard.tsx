@@ -42,7 +42,7 @@ export default function CafeCard({
 
       fetchData();
       return () => {}
-  },[]);
+  },[cafeName]);
 
 
   return (
