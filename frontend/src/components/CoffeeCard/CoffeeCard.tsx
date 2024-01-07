@@ -1,4 +1,4 @@
-import dummyCoffeeImage from "../../assets/images/cappuccino.png";
+import dummyCoffeeImage from "../../assets/images/coffees/cappuccino.png";
 import SVGStar from "../Icons/SVGStar";
 
 interface CardProps {
@@ -9,7 +9,7 @@ interface CardProps {
 }
 export default function CoffeeCard({coffeeName, price, rating, imgSrc = dummyCoffeeImage} : CardProps) {
     return <div className="relative flex flex-col items-center h-[220px] justify-end">
-        <img src={imgSrc} alt="Cappuccino" width={146} height={133} className="absolute top-[0px]"/>
+        <img src={imgSrc} alt="coffee expectations" width={146} height={133} className="absolute top-[0px] h-[133px] w-[140px]"/>
 
         <div className="bg-white rounded-[8px] p-[12px] w-full pt-[100px]">
             <h3 className="text-[16px] font-bold text-brand-black leading-[130%]">{coffeeName}</h3>
