@@ -7,6 +7,7 @@ import Root from "./pages/Root";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import CoffeeShop from "./pages/CoffeeShop/CoffeeShop";
+import Manager from "./pages/Manager/Manager";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/coffeeshops", element: <Search />},
       { path: "/coffeeshops/:coffeeName", element: <CoffeeShop />},
+      { path: "/manage/:managerId", element: <Manager />}
     ],
   },
 ]);
