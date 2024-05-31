@@ -8,6 +8,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import CoffeeShop from "./pages/CoffeeShop/CoffeeShop";
 import Manager from "./pages/Manager/Manager";
+import AddProduct from "./pages/Manager/AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -18,9 +19,10 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "/coffeeshops", element: <Search />},
-      { path: "/coffeeshops/:coffeeName", element: <CoffeeShop />},
-      { path: "/manage/:managerId", element: <Manager />}
+      { path: "/coffeeshops", element: <Search /> },
+      { path: "/coffeeshops/:coffeeName", element: <CoffeeShop /> },
+      { path: "/manage/:managerId", element: <Manager /> },
+      { path: "/add-product", element: <AddProduct /> },
     ],
   },
 ]);
