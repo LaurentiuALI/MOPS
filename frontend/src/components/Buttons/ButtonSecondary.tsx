@@ -1,6 +1,8 @@
+import React from "react";
+
 interface buttonSecondaryProps {
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
   fullwidth?: boolean;
   icon?: {
@@ -18,7 +20,7 @@ export default function ButtonSecondary({
 }: buttonSecondaryProps) {
   return (
     <button
-      className={`h-14 w-[300px] rounded-md bg-brand-secondary border-2 border-brand-main text-brand-main text-xl font-semibold flex items-center justify-center  ${className}`}
+      className={`h-14 w-[300px] rounded-md bg-brand-secondary border-2 border-brand-main text-brand-main text-xl font-semibold flex items-center justify-center ${className}`}
       onClick={onClick}
     >
       {icon ? (
