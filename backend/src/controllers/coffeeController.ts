@@ -1,13 +1,24 @@
 import Coffee from "../models/coffeeModel";
 import { Request, Response } from 'express';
+import cloudinary from '../cloudinary';
 
 // Create coffee
 export const addCoffee = async (req: Request, res: Response) => {
     try {
-        const { Name, Ingredients, Description, Allergens} = req.body;
+        const { Name, Ingredients, Description, Allergens } = req.body;
+        const file = req.file; // Assuming you are using multer to handle file uploads
 
-        if(!Name) {
+        if (!Name) {
             return res.status(400).json({ message: "Please provide coffee's name" });
+        }
+
+        let imageUrl = '';
+        if (file) {
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: 'coffees', // Folder in Cloudinary to store images
+            });
+            imageUrl = result.secure_url;
+            console.log(imageUrl);
         }
 
         // Create a new coffee
@@ -15,13 +26,14 @@ export const addCoffee = async (req: Request, res: Response) => {
             Name,
             Ingredients,
             Description,
-            Allergens
+            Allergens,
+            Image: imageUrl,
         });
 
-        res.status(201).json({ message: "Coffee created successfully" });
+        res.status(201).json({ message: "Coffee created successfully", coffee });
     } catch (error) {
         console.error(error);
-        res.json({ message: "Error creating coffee", error });
+        res.status(500).json({ message: "Error creating coffee", error });
     }
 };
 
@@ -53,8 +65,8 @@ export const getAllCoffees = async (req: Request, res: Response) => {
 // Update coffee
 export const updateCoffee = async (req: Request, res: Response) => {
     try {
-        const { Ingredients, Description, Allergens } = req.body;
-        let updateData: { Ingredients?: [string]; Description?: string; Allergens?: [string] } = {};
+        const { Ingredients, Description, Allergens, ImageURL } = req.body;
+        let updateData: { Ingredients?: [string]; Description?: string; Allergens?: [string]; ImageURL?: string } = {};
 
         if (Ingredients !== undefined) {
             updateData.Ingredients = Ingredients;
@@ -64,6 +76,9 @@ export const updateCoffee = async (req: Request, res: Response) => {
         }
         if (Allergens !== undefined) {
             updateData.Allergens = Allergens;
+        }
+        if(ImageURL !== undefined){
+            updateData.ImageURL = ImageURL;
         }
 
         const updatedCoffee = await Coffee.findOneAndUpdate(

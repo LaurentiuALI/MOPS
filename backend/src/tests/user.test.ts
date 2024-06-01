@@ -1,5 +1,3 @@
-// FILEPATH: /c:/Users/Sile/Desktop/Facultate/MASTER/AN1/MOPS/MOPS_GIT/MOPS/backend/src/tests/userController.test.ts
-
 import express from "express";
 import request from "supertest";
 import bcrypt from "bcrypt";

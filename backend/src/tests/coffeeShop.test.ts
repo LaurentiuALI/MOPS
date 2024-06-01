@@ -3,7 +3,7 @@ import request from "supertest";
 import { coffeeShopRouter } from "../routes/coffeeShopRoute";
 import { getAllCoffeeShops } from "../controllers/coffeeShopController";
 import CoffeeShop from '../models/coffeeShopModel';
-import { get } from "mongoose";
+
 
 // Mock the CoffeeShop model with a specific implementation
 jest.mock('../models/coffeeShopModel', () => ({
