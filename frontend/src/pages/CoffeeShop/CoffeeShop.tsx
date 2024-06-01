@@ -129,7 +129,7 @@ type ICoffeeShop = {
   ManagerId: number;
   Menu: [IMenuItem];
   Address: string;
-  Availabilities: [string];
+  Availabilities: [{workDay: string, openingHour:string,closingHour:string}];
   ServiceType: string;
   Description: string;
   Photos: [string];
@@ -323,12 +323,13 @@ function CoffeeShop() {
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
                   Serving coffee on
                 </h2>
-                {coffeeShopInfo?.Availabilities.map((dayOfTheWeek, index) => (
+                {coffeeShopInfo?.Availabilities.map((day, index) => (
                   <div key={`schedule-${index}`}>
                     <div className="flex justify-between w-full">
                       <p className="text-[14px] font-normal leading-[150%] text-brand-main">
-                        {dayOfTheWeek}
+                        {day.workDay}
                       </p>
+                      <p>{day.openingHour} - {day.closingHour}</p>
                     </div>
                     <div className="h-[1px] w-full border border-brand-borderDark"></div>
                   </div>
