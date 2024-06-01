@@ -45,7 +45,6 @@ export const getCoffeeShopByCoffeeName = async (
   res: Response
 ) => {
   try {
-    console.log("🚀 ~ req.params.CoffeeName:", req.params);
     const coffeeShops = await CoffeeShop.find({
       "Menu.Name": req.params.coffeeName,
     });
@@ -62,17 +61,28 @@ export const getCoffeeShopByCoffeeName = async (
 // Update CoffeeShop
 export const updateCoffeeShop = async (req: Request, res: Response) => {
   try {
+    const { name } = req.params;
     const updateData = req.body;
+
     const updatedCoffeeShop = await CoffeeShop.findOneAndUpdate(
-      { name: req.params.name },
-      updateData,
+      { Name: name, "Menu.Name": updateData.Name }, // Find the coffee shop by name and the menu item by name
+      {
+        $set: {
+          "Menu.$.Name": updateData.Name,
+          "Menu.$.Price": updateData.Price,
+          "Menu.$.Quantity": updateData.Quantity,
+        },
+      }, // Update the matching menu item
       { new: true }
     );
 
     if (!updatedCoffeeShop) {
-      return res.status(404).json({ message: "CoffeeShop not found" });
+      return res
+        .status(404)
+        .json({ message: "CoffeeShop not found or Menu item not found" });
     }
-    res.json({ message: "CoffeeShop updated successfully" });
+
+    res.json({ message: "CoffeeShop updated successfully", updatedCoffeeShop });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating CoffeeShop", error });
@@ -92,5 +102,27 @@ export const deleteCoffeeShop = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error deleting CoffeeShop", error });
+  }
+};
+
+export const deleteMenuItem = async (req: Request, res: Response) => {
+  try {
+    const item = req.body; // Assuming you send the name of the item to delete in the request body
+
+    const updatedCoffeeShop = await CoffeeShop.findOneAndUpdate(
+      { "Menu._id": item._id },
+      { $pull: { Menu: { Name: item.Name } } } // Remove the item from the menu array
+    );
+
+    if (!updatedCoffeeShop) {
+      return res
+        .status(404)
+        .json({ message: "CoffeeShop not found or Menu item not found" });
+    }
+
+    res.json({ message: "Menu item deleted successfully", updatedCoffeeShop });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting menu item", error });
   }
 };

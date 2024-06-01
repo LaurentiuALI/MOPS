@@ -77,12 +77,29 @@ const Manager = () => {
     fetchCoffeeShop();
   }, [params.managerId]);
 
-  const handleRemoveCoffee = (index: number) => {
-    setCoffeeShop((prev) => {
-      if (!prev) return prev;
-      const updatedCoffees = prev.Menu.filter((_, i) => i !== index);
-      return { ...prev, Menu: updatedCoffees } as ICoffeeShop;
-    });
+  const deleteItem = async (index: number) => {
+    try {
+      // Make a copy of the menu items array and remove the item at the specified index
+      const updatedMenu: IMenuItem[] = [...(coffeeShop?.Menu || [])];
+      updatedMenu.splice(index, 1);
+
+      // Update the state with the modified menu items
+      setCoffeeShop(
+        (prev) =>
+          ({
+            ...prev,
+            Menu: updatedMenu,
+          } as ICoffeeShop)
+      );
+
+      // Send a request to the server to delete the item
+      await axios.patch(
+        `${import.meta.env.VITE_URL}coffeeShops/${coffeeShop?.Name}/menuItem`,
+        { ...coffeeShop?.Menu[index] }
+      );
+    } catch (err) {
+      console.log("Failed to delete item from the server");
+    }
   };
 
   if (loading) return <div className="text-center mt-20">Loading...</div>;
@@ -150,8 +167,9 @@ const Manager = () => {
               <div>
                 {coffeeShop?.Menu.map((product, index) => (
                   <CoffeeCardRow
+                    coffeeShopName={coffeeShop?.Name}
                     key={`coffeeCardRow-${index}`}
-                    coffeeName={product.Name}
+                    product={product}
                     coffeeImage={
                       coffeesAvailable[
                         Math.floor(
@@ -159,9 +177,7 @@ const Manager = () => {
                         ) as keyof typeof coffeesAvailable
                       ] || dummyCoffeeShopImage
                     }
-                    price={5.0}
-                    rating={4.2}
-                    onRemove={() => handleRemoveCoffee(index)}
+                    onRemove={() => deleteItem(index)}
                   />
                 ))}
               </div>

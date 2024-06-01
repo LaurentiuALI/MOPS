@@ -9,8 +9,6 @@ export const getCoffeeShopByManagerId = async (req: Request, res: Response) => {
       {}
     );
 
-    console.log(req.params.managerId);
-    console.log(coffeeShop);
     if (!coffeeShop) {
       return res.status(404).json({ message: "Coffee shop not found" });
     }
