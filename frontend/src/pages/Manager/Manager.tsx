@@ -20,6 +20,7 @@ import irish_coffee from "../../assets/images/coffees/irish_coffee.png";
 import latte from "../../assets/images/coffees/latte.png";
 import mocha from "../../assets/images/coffees/mocha.png";
 import { FaPlusCircle } from "react-icons/fa";
+import SVGPen from "../../components/Icons/SVGPen";
 
 const coffeesAvailable = {
   0: americano,
@@ -44,7 +45,7 @@ type ICoffeeShop = {
   ManagerId: number;
   Menu: [IMenuItem];
   Address: string;
-  Availabilities: [string];
+  Availabilities: [{workDay: string, openingHour:string,closingHour:string}];
   ServiceType: string;
   Description: string;
   Photos: [string];
@@ -112,9 +113,29 @@ const Manager = () => {
               onClick={() => setMenuIsOpen((prev) => !prev)}
             />
           </header>
-          <p className="text-brand-secondary text-sm font-normal p-4">
+          <div className="flex center justify-between w-full">
+          <p contentEditable id="cofee-shop-address" className="text-brand-secondary text-sm font-normal p-4">
             {coffeeShop?.Address || "Address"}
           </p>
+          <SVGPen title="edit" className="mt-4" onClick={()=>{
+            const newAddress = document.getElementById("cofee-shop-address")?.innerText
+            if(newAddress != coffeeShop?.Address && (typeof newAddress == 'string')){
+              console.log(newAddress);
+              
+              axios.put(`${import.meta.env.VITE_URL}coffeeshop/manager/${coffeeShop?.Name}/address`,
+                {
+                  newAddress : newAddress
+                }
+              ).then(data =>{
+                console.log(data);
+              }).catch(error=>{
+                console.log(error);
+              })
+            }else{
+              document.getElementById("cofee-shop-address")?.focus()
+            }
+          }}/>
+          </div>
 
           <img
             src={dummyCoffeeShopImage}
@@ -134,7 +155,7 @@ const Manager = () => {
 
         <main className="h-full bg-brand-light">
           <div className="flex gap-3 w-full items-center py-4 px-4 relative">
-            {["Products", "Description", "Photos"].map((section, index) => (
+            {["Products", "Description", "Photos","Schedule"].map((section, index) => (
               <Chip
                 key={`chip-${index}`}
                 selected={index === selectedChip}
@@ -197,6 +218,59 @@ const Manager = () => {
                   </div>
                 </>
               )}
+
+
+              {selectedChip == 3 && (
+              <>
+                <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
+                  Serving coffee on
+                </h2>
+                {coffeeShop?.Availabilities.map((day, index) => (
+                  <div key={`schedule-${index}`}>
+                    <div className="flex justify-between w-full">
+                      <p className="text-[14px] font-normal leading-[150%] text-brand-main w-full">
+                        {day.workDay}
+                      </p>
+                      <p className="w-full"><span contentEditable id={`schedule-${index}-opening`}>{day.openingHour}</span> - <span contentEditable id={`schedule-${index}-closing`}>{day.closingHour}</span></p>
+                      <SVGPen className="w-[32px]" title="edit" onClick={
+                        ()=>{
+                          const newOpeningHour = document.getElementById(`schedule-${index}-opening`)?.innerHTML
+                          const newClosingHour = document.getElementById(`schedule-${index}-closing`)?.innerHTML
+                          if(
+                            day.openingHour != newOpeningHour && (typeof newOpeningHour == 'string')
+                            ||
+                            day.closingHour != newClosingHour && (typeof newClosingHour == 'string')
+                          ){
+                            
+                              // update
+                              const newSchedule =[...coffeeShop.Availabilities]
+                              newSchedule[index] = {
+                                workDay: day.workDay,
+                                openingHour: newOpeningHour!,
+                                closingHour: newClosingHour!,
+                              }
+                              axios.put(`${import.meta.env.VITE_URL}coffeeshop/manager/${coffeeShop.Name}/schedule`,{
+                                newSchedule: newSchedule
+                              }).then(data=>{
+                                console.log(data);
+                                
+                              }).catch(error=>{
+                                console.log(error);
+                                
+                              })
+                            }else{
+                              const element = document.getElementById(`schedule-${index}-opening`)
+                              element?.focus()
+                            }
+                          
+                        }
+                      } />
+                    </div>
+                    <div className="h-[1px] w-full border border-brand-borderDark"></div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </main>
         <FaPlusCircle

@@ -44,10 +44,14 @@ const coffeeShopSchema = new mongoose.Schema({
     required: true,
   },
   Availabilities: {
-    type: [String],
+    type: [{
+        workDay: String,
+        openingHour: String,
+        closingHour:String,
+    }],
     default: null,
-    required: false,
-  },
+    require: false
+},
   ServiceType: {
     type: String,
     enum: Object.values(ServiceType),
