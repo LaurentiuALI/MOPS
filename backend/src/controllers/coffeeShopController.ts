@@ -107,29 +107,35 @@ export const deleteCoffeeShop = async (req: Request, res: Response) => {
 
 export const addItemToMenu = async (req: Request, res: Response) => {
   try {
-      const { ManagerId, Coffee } = req.body;
+    console.log("🚀 ~ addItemToMenu ~ req.body:", req.body);
+    const { ManagerId, Coffee } = req.body;
 
-      if (!ManagerId || !Coffee) {
-          return res.status(400).json({ message: "Please provide both ManagerId and Coffee" });
-      }
+    if (!ManagerId || !Coffee) {
+      return res
+        .status(400)
+        .json({ message: "Please provide both ManagerId and Coffee" });
+    }
 
-      const coffeeShop = await CoffeeShop.findOne({ ManagerId: ManagerId });
+    const coffeeShop = await CoffeeShop.findOne({ ManagerId: ManagerId });
 
-      console.log(coffeeShop);
+    console.log(coffeeShop);
 
-      if (!coffeeShop) {
-          return res.status(404).json({ message: "Coffee shop not found" });
-      }
-      
-      // Add the new coffee item to the menu
-      coffeeShop.Menu.push(Coffee);
+    if (!coffeeShop) {
+      return res.status(404).json({ message: "Coffee shop not found" });
+    }
 
-      await coffeeShop.save();
+    // Add the new coffee item to the menu
+    coffeeShop.Menu.push(Coffee);
 
-      res.status(200).json({ message: "Coffee added to menu successfully", updatedCoffeeShop: coffeeShop });
+    await coffeeShop.save();
+
+    res.status(200).json({
+      message: "Coffee added to menu successfully",
+      updatedCoffeeShop: coffeeShop,
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error adding coffee to menu", error });
+    console.error(error);
+    res.status(500).json({ message: "Error adding coffee to menu", error });
   }
 };
 

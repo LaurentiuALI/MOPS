@@ -1,12 +1,17 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaFileUpload } from "react-icons/fa";
+import axios from "axios";
 
 const AddProduct: React.FC = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [productName, setProductName] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [photo, setPhoto] = useState<File | null>(null);
+  const [ingredients, setIngredients] = useState<string[]>([]);
+  const [description, setDescription] = useState<string>("");
+  const managerId = params.managerId;
 
   const handleProductNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
@@ -16,21 +21,54 @@ const AddProduct: React.FC = () => {
     setPrice(e.target.value);
   };
 
+  const handleIngredientsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+    if (value) {
+      const ingredientsArray = value
+        .split(",")
+        .map((ingredient) => ingredient.trim());
+      setIngredients(ingredientsArray);
+    } else {
+      setIngredients([]);
+    }
+  };
+
+  const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+  };
+
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPhoto(file);
     }
-
-    console.log("🚀 ~ handlePhotoChange ~ photo:", photo);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Here you can submit the form data (productName, price, photo) to your backend
-    // For example, you can use axios to make a POST request
-    // After successful submission, you can navigate to another page
-    navigate(-1); // Navigate back to the previous page
+
+    const formData = new FormData();
+    formData.append("Name", productName);
+    formData.append("Price", price);
+    ingredients.forEach((ingredient, index) =>
+      formData.append(`Ingredients[${index}]`, ingredient)
+    );
+    formData.append("Description", description);
+    if (photo) {
+      formData.append("Image", photo);
+    }
+
+    try {
+      await axios.post(`${import.meta.env.VITE_URL}coffees/add`, formData);
+      await axios.post(`${import.meta.env.VITE_URL}coffeeShops/addItemToMenu`, {
+        ManagerId: managerId,
+        Coffee: { Name: productName, Price: price, Quantity: 1 },
+      });
+      navigate(-1); // Navigate back to the previous page
+    } catch (error) {
+      navigate(-1); // Navigate back to the previous page
+      console.error("Error adding product:", error);
+    }
   };
 
   return (
@@ -55,7 +93,15 @@ const AddProduct: React.FC = () => {
                   onChange={handlePhotoChange}
                   className="hidden"
                 />
-                <FaFileUpload className="h-52 w-52" />
+                {photo ? (
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt="Coffee"
+                    className="h-52 w-52 object-cover rounded-lg"
+                  />
+                ) : (
+                  <FaFileUpload className="h-52 w-52" />
+                )}
               </label>
             </div>
           </div>
@@ -93,7 +139,41 @@ const AddProduct: React.FC = () => {
               required
             />
           </div>
-
+          <div>
+            <label
+              htmlFor="ingredients"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Ingredients (comma-separated)
+            </label>
+            <input
+              type="text"
+              id="ingredients"
+              name="ingredients"
+              value={ingredients.join(", ")}
+              onChange={handleIngredientsChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:border-brand-main"
+              placeholder="e.g., Milk, Sugar, Coffee"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={description}
+              onChange={handleDescriptionChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:border-brand-main"
+              rows={4}
+              placeholder="Enter product description"
+              required
+            />
+          </div>
           <button
             type="submit"
             className="bg-brand-main text-white py-2 px-4 rounded hover:bg-opacity-80 focus:outline-none focus:ring focus:border-brand-main"

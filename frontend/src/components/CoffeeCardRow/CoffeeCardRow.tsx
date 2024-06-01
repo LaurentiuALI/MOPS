@@ -21,10 +21,10 @@ interface CoffeeCardRowProps {
 const CoffeeCardRow: React.FC<CoffeeCardRowProps> = ({
   coffeeShopName,
   product,
-  coffeeImage,
   onRemove,
 }) => {
   const [itemQuantity, setItemQuantity] = useState<IMenuItem>(product);
+  const [coffeePhoto, setCoffeePhoto] = useState<string>("");
 
   const increaseQuantity = async () =>
     setItemQuantity((prev) => ({ ...prev, Quantity: prev?.Quantity + 1 }));
@@ -32,6 +32,20 @@ const CoffeeCardRow: React.FC<CoffeeCardRowProps> = ({
     setItemQuantity((prev) => ({ ...prev, Quantity: prev.Quantity - 1 }));
 
   useEffect(() => {
+    const getPhoto = async () => {
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_URL}coffees/${product.Name}`
+        );
+        setCoffeePhoto(result.data.Image);
+        console.log("🚀 ~ getPhoto ~ result:", result.data.Image);
+      } catch (err) {
+        console.log("Failed to find photo");
+      }
+    };
+
+    getPhoto();
+
     const updateQuantityOnServer = async () => {
       try {
         await axios.patch(
@@ -44,13 +58,13 @@ const CoffeeCardRow: React.FC<CoffeeCardRowProps> = ({
     };
 
     updateQuantityOnServer();
-  }, [itemQuantity, coffeeShopName]);
+  }, [itemQuantity, coffeeShopName, product.Name]);
 
   return (
     <div className="flex items-center p-4 bg-white shadow-md rounded-lg mb-4">
       <div className="w-1/5">
         <img
-          src={coffeeImage}
+          src={coffeePhoto}
           alt={product.Name}
           className="w-full h-auto rounded-lg"
         />

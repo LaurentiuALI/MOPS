@@ -46,7 +46,9 @@ type ICoffeeShop = {
   ManagerId: number;
   Menu: [IMenuItem];
   Address: string;
-  Availabilities: [{workDay: string, openingHour:string,closingHour:string}];
+  Availabilities: [
+    { workDay: string; openingHour: string; closingHour: string }
+  ];
   ServiceType: string;
   Description: string;
   Photos: [string];
@@ -60,9 +62,9 @@ const Manager = () => {
   const [error, setError] = useState<string>("");
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
   const [selectedChip, setSelectedChip] = useState<number>(0);
+  const managerId = params.managerId;
 
   useEffect(() => {
-    const managerId = params.managerId;
     const fetchCoffeeShop = async () => {
       try {
         const response = await axios.get(
@@ -77,7 +79,7 @@ const Manager = () => {
     };
 
     fetchCoffeeShop();
-  }, [params.managerId]);
+  }, [managerId]);
 
   const deleteItem = async (index: number) => {
     try {
@@ -132,27 +134,46 @@ const Manager = () => {
             />
           </header>
           <div className="flex center justify-between w-full pr-[16px]">
-          <p contentEditable id="cofee-shop-address" className="text-brand-secondary text-sm font-normal p-4">
-            {coffeeShop?.Address || "Address"}
-          </p>
-          <SVGPen title="edit" className="mt-4" color="#FBF6F2" onClick={()=>{
-            const newAddress = document.getElementById("cofee-shop-address")?.innerText
-            if(newAddress != coffeeShop?.Address && (typeof newAddress == 'string')){
-              console.log(newAddress);
-              
-              axios.put(`${import.meta.env.VITE_URL}coffeeshop/manager/${coffeeShop?.Name}/address`,
-                {
-                  newAddress : newAddress
+            <p
+              contentEditable
+              id="cofee-shop-address"
+              className="text-brand-secondary text-sm font-normal p-4"
+            >
+              {coffeeShop?.Address || "Address"}
+            </p>
+            <SVGPen
+              title="edit"
+              className="mt-4"
+              color="#FBF6F2"
+              onClick={() => {
+                const newAddress =
+                  document.getElementById("cofee-shop-address")?.innerText;
+                if (
+                  newAddress != coffeeShop?.Address &&
+                  typeof newAddress == "string"
+                ) {
+                  console.log(newAddress);
+
+                  axios
+                    .put(
+                      `${import.meta.env.VITE_URL}coffeeshop/manager/${
+                        coffeeShop?.Name
+                      }/address`,
+                      {
+                        newAddress: newAddress,
+                      }
+                    )
+                    .then((data) => {
+                      console.log(data);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                } else {
+                  document.getElementById("cofee-shop-address")?.focus();
                 }
-              ).then(data =>{
-                console.log(data);
-              }).catch(error=>{
-                console.log(error);
-              })
-            }else{
-              document.getElementById("cofee-shop-address")?.focus()
-            }
-          }}/>
+              }}
+            />
           </div>
 
           <img
@@ -173,15 +194,17 @@ const Manager = () => {
 
         <main className="h-full bg-brand-light">
           <div className="flex gap-3 w-full items-center py-4 px-4 relative">
-            {["Products", "Description", "Photos","Schedule"].map((section, index) => (
-              <Chip
-                key={`chip-${index}`}
-                selected={index === selectedChip}
-                onClick={() => setSelectedChip(index)}
-              >
-                {section}
-              </Chip>
-            ))}
+            {["Products", "Description", "Photos", "Schedule"].map(
+              (section, index) => (
+                <Chip
+                  key={`chip-${index}`}
+                  selected={index === selectedChip}
+                  onClick={() => setSelectedChip(index)}
+                >
+                  {section}
+                </Chip>
+              )
+            )}
           </div>
 
           <div className="px-4 flex flex-col gap-3 pb-4">
@@ -236,8 +259,7 @@ const Manager = () => {
                 </>
               )}
 
-
-              {selectedChip == 3 && (
+            {selectedChip == 3 && (
               <>
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
                   Serving coffee on
@@ -258,7 +280,7 @@ const Manager = () => {
                   //           ||
                   //           day.closingHour != newClosingHour && (typeof newClosingHour == 'string')
                   //         ){
-                            
+
                   //             // update
                   //             const newSchedule =[...coffeeShop.Availabilities]
                   //             newSchedule[index] = {
@@ -270,22 +292,26 @@ const Manager = () => {
                   //               newSchedule: newSchedule
                   //             }).then(data=>{
                   //               console.log(data);
-                                
+
                   //             }).catch(error=>{
                   //               console.log(error);
-                                
+
                   //             })
                   //           }else{
                   //             const element = document.getElementById(`schedule-${index}-opening`)
                   //             element?.focus()
                   //           }
-                          
+
                   //       }
                   //     } />
                   //   </div>
                   //   <div className="h-[1px] w-full border border-brand-borderDark"></div>
                   // </div>
-                  <Row index={index} coffeeShop={coffeeShop} scheduleData={scheduleData} />
+                  <Row
+                    index={index}
+                    coffeeShop={coffeeShop}
+                    scheduleData={scheduleData}
+                  />
                 ))}
               </>
             )}
@@ -293,7 +319,7 @@ const Manager = () => {
         </main>
         <FaPlusCircle
           className="fixed bottom-6 right-6 bg-brand-secondary text-brand-main w-12 h-12 flex items-center justify-center rounded-full  cursor-pointer"
-          onClick={() => navigate("/add-product")}
+          onClick={() => navigate(`/add-product/${managerId}`)}
         />
       </div>
     </>
