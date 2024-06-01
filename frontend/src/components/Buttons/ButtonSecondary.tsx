@@ -1,6 +1,6 @@
 interface buttonSecondaryProps {
   className?: string;
-  onClick?: (() => void) | ((e:any)=>void);
+  onClick?: () => void;
   children?: React.ReactNode;
   fullwidth?: boolean;
   icon?: {

@@ -20,11 +20,17 @@ import retroCafe from "../../assets/images/retro_cafe.jpg";
 import tableAtCafe from "../../assets/images/table_at_cafe.jpg";
 import barista from "../../assets/images/barista.jpg";
 
-type coffeeShop = {
+type IMenuItem = {
+  Name: string;
+  Price: number;
+  Quantity: number;
+};
+
+type ICoffeeShop = {
   Name: string;
   Geolocation: [number, number];
   ManagerId: number;
-  Coffees: [string];
+  Menu: [IMenuItem];
   Address: string;
   Availabilities: [string];
   ServiceType: string;
@@ -38,7 +44,7 @@ export default function Search() {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   const [distanceSet, setDistanceSet] = useState(false);
-  const [coffeeShops, setCoffeeShops] = useState<[coffeeShop]>();
+  const [coffeeShops, setCoffeeShops] = useState<[ICoffeeShop] | []>();
 
   const [listOfChipsSize, setListOfChipsSize] = useState(14); // 14px
   const [dataIsLoading, setDataIsLoading] = useState(true);
@@ -66,7 +72,7 @@ export default function Search() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCoffe = async () => {
       const result = await axios
         .get(`${import.meta.env.VITE_URL}coffeeShops/byCoffee/${search}`)
         .catch((error) => {
@@ -75,12 +81,14 @@ export default function Search() {
 
       if (result) {
         setCoffeeShops(result.data);
+      } else {
+        setCoffeeShops([]);
       }
     };
 
     try {
       if (search.length > 0) {
-        fetchData();
+        fetchCoffe();
       }
     } catch (error) {
       console.log(error);

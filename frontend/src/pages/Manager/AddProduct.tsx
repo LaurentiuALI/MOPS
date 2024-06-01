@@ -1,28 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFileUpload } from "react-icons/fa";
 
-const AddProduct = () => {
+const AddProduct: React.FC = () => {
   const navigate = useNavigate();
-  const [productName, setProductName] = useState("");
-  const [price, setPrice] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [productName, setProductName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [photo, setPhoto] = useState<File | null>(null);
 
-  const handleProductNameChange = (e) => {
+  const handleProductNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
   };
 
-  const handlePriceChange = (e) => {
+  const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPrice(e.target.value);
   };
 
-  const handlePhotoChange = (e) => {
-    // Handle file upload
-    const file = e.target.files[0];
-    setPhoto(file);
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhoto(file);
+    }
+
+    console.log("🚀 ~ handlePhotoChange ~ photo:", photo);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Here you can submit the form data (productName, price, photo) to your backend
     // For example, you can use axios to make a POST request
@@ -36,7 +39,7 @@ const AddProduct = () => {
         <h2 className="text-2xl font-bold mb-4 text-brand-main">Add Product</h2>
         <form
           onSubmit={handleSubmit}
-          className=" flex flex-col justify-center space-y-4"
+          className="flex flex-col justify-center space-y-4"
         >
           <div>
             <div className="flex items-center bg-gray-200 justify-center p-4 rounded text-brand-main">

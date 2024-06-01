@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import MainNavigation from "../../components/Menu/MainNavigation";
 import SVGArrow from "../../components/Icons/SVGArrow";
 import SVGMenu from "../../components/Icons/SVGMenu";
-import SVGStar from "../../components/Icons/SVGStar";
 import SVGHeart from "../../components/Icons/SVGHeart";
 import SVGShare from "../../components/Icons/SVGShare";
 import SVGMap from "../../components/Icons/SVGMap";
@@ -33,24 +32,32 @@ const coffeesAvailable = {
   7: latte,
   8: mocha,
 };
-interface coffeeDataTypes {
-  name: string;
-  menu: [];
-  address: string;
-  availabilities: [];
-  serviceType: string;
-  description: string | null;
-  photos: [];
-}
+type IMenuItem = {
+  Name: string;
+  Price: number;
+  Quantity: number;
+};
+
+type ICoffeeShop = {
+  Name: string;
+  Geolocation: [number, number];
+  ManagerId: number;
+  Menu: [IMenuItem];
+  Address: string;
+  Availabilities: [string];
+  ServiceType: string;
+  Description: string;
+  Photos: [string];
+};
 
 const Manager = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const [coffeeShop, setCoffeeShop] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [selectedChip, setSelectedChip] = useState(0);
+  const [coffeeShop, setCoffeeShop] = useState<ICoffeeShop>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+  const [selectedChip, setSelectedChip] = useState<number>(0);
 
   useEffect(() => {
     const managerId = params.managerId;
@@ -74,7 +81,7 @@ const Manager = () => {
     setCoffeeShop((prev) => {
       if (!prev) return prev;
       const updatedCoffees = prev.Menu.filter((_, i) => i !== index);
-      return { ...prev, Menu: updatedCoffees };
+      return { ...prev, Menu: updatedCoffees } as ICoffeeShop;
     });
   };
 
@@ -115,16 +122,7 @@ const Manager = () => {
           />
 
           <div className="flex justify-between px-4 pt-4">
-            <div className="flex gap-1 items-center">
-              {coffeeShop?.rating ? (
-                <>
-                  <p className="text-brand-borderDark text-xs font-normal leading-150%">
-                    {coffeeShop.rating}
-                  </p>
-                  <SVGStar title="rating icon" />
-                </>
-              ) : null}
-            </div>
+            <div className="flex gap-1 items-center"></div>
 
             <div className="flex gap-2 items-center">
               <SVGHeart title="heart" color="#FBF6F2" />
@@ -155,8 +153,11 @@ const Manager = () => {
                     key={`coffeeCardRow-${index}`}
                     coffeeName={product.Name}
                     coffeeImage={
-                      coffeesAvailable[Math.floor(Math.random() * 9)] ||
-                      dummyCoffeeShopImage
+                      coffeesAvailable[
+                        Math.floor(
+                          Math.random() * 9
+                        ) as keyof typeof coffeesAvailable
+                      ] || dummyCoffeeShopImage
                     }
                     price={5.0}
                     rating={4.2}

@@ -108,14 +108,32 @@ const coffeesAvailable = {
   8: mocha,
 };
 
-export interface reviewInterface {
+export type IReview = {
   CoffeeShopName: string;
   CoffeeName: string;
   Username: string;
   Rating: number;
   Notes: string | null;
   TimeStamp: string;
-}
+};
+
+type IMenuItem = {
+  Name: string;
+  Price: number;
+  Quantity: number;
+};
+
+type ICoffeeShop = {
+  Name: string;
+  Geolocation: [number, number];
+  ManagerId: number;
+  Menu: [IMenuItem];
+  Address: string;
+  Availabilities: [string];
+  ServiceType: string;
+  Description: string;
+  Photos: [string];
+};
 
 function CoffeeShop() {
   const navigate = useNavigate();
@@ -125,17 +143,8 @@ function CoffeeShop() {
 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
-  interface coffeeDataTypes {
-    name: string;
-    menu: [];
-    address: string;
-    availabilities: [];
-    serviceType: string;
-    description: string | null;
-    photos: [];
-  }
-  const [coffeeShopInfo, setCoffeeShopInfo] = useState<coffeeDataTypes>();
-  const [reviews, setReviews] = useState<reviewInterface[] | null>();
+  const [coffeeShopInfo, setCoffeeShopInfo] = useState<ICoffeeShop>();
+  const [reviews, setReviews] = useState<IReview[] | null>();
   const [shopRating, setShopRating] = useState(0);
 
   const param = useParams();
@@ -156,27 +165,23 @@ function CoffeeShop() {
         });
 
       if (coffeeShopDataResults) {
-        console.log(
-          "🚀 ~ fetchData ~ coffeeShopDataResults:",
-          coffeeShopDataResults
-        );
         setCoffeeShopInfo((prev) => {
           return {
             ...prev,
-            name: coffeeShopDataResults.data.Name,
-            menu: coffeeShopDataResults.data.Menu,
-            address: coffeeShopDataResults.data.Address,
-            availabilities: coffeeShopDataResults.data.Availabilities,
-            serviceType: coffeeShopDataResults.data.ServiceType,
-            description: coffeeShopDataResults.data.Description,
-            photos: coffeeShopDataResults.data.Photos,
-          };
+            Name: coffeeShopDataResults.data.Name,
+            Menu: coffeeShopDataResults.data.Menu,
+            Address: coffeeShopDataResults.data.Address,
+            Availabilities: coffeeShopDataResults.data.Availabilities,
+            ServiceType: coffeeShopDataResults.data.ServiceType,
+            Description: coffeeShopDataResults.data.Description,
+            Photos: coffeeShopDataResults.data.Photos,
+          } as ICoffeeShop;
         });
       }
 
       if (coffeeShopReviewsResult) {
         const coffeeShopReviews = coffeeShopReviewsResult.data.filter(
-          (review: reviewInterface) => {
+          (review: IReview) => {
             return review.CoffeeShopName == param.coffeeName;
           }
         );
@@ -201,7 +206,7 @@ function CoffeeShop() {
     return () => {};
   }, [param.coffeeName]);
 
-  function addReview(newReview: reviewInterface) {
+  function addReview(newReview: IReview) {
     setReviews((prev) => {
       if (prev != undefined) {
         const existingReviews = [...prev];
@@ -228,7 +233,7 @@ function CoffeeShop() {
               }}
             />
             <h1 className="text-brand-secondary text-[32px] font-normal leading-8 w-full">
-              {coffeeShopInfo?.name || dummyData.coffeShopName}
+              {coffeeShopInfo?.Name || dummyData.coffeShopName}
             </h1>
             <SVGMenu
               className="self-center"
@@ -239,7 +244,7 @@ function CoffeeShop() {
             />
           </header>
           <p className="text-brand-secondary text-[14px] font-normal p-[16px]">
-            {coffeeShopInfo?.address || dummyData.address}
+            {coffeeShopInfo?.Address || dummyData.address}
           </p>
 
           <img
@@ -283,7 +288,7 @@ function CoffeeShop() {
           <div className="px-[16px] flex flex-col gap-[12px] pb-[16px]">
             {selectedChip == 0 && (
               <div className="grid grid-cols-2 gap-[16px]">
-                {coffeeShopInfo?.menu.map((product, index) => {
+                {coffeeShopInfo?.Menu.map((product, index) => {
                   return (
                     <CoffeeCard
                       key={`coffeeCard-${index}`}
@@ -291,7 +296,10 @@ function CoffeeShop() {
                       price={product.Price}
                       rating={4.2}
                       imgSrc={
-                        coffeesAvailable[Math.floor(Math.random() * 8) + 1]
+                        coffeesAvailable[
+                          (Math.floor(Math.random() * 8) +
+                            1) as keyof typeof coffeesAvailable
+                        ]
                       }
                     />
                   );
@@ -302,10 +310,10 @@ function CoffeeShop() {
             {selectedChip == 1 && (
               <>
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
-                  About {coffeeShopInfo?.name}
+                  About {coffeeShopInfo?.Name}
                 </h2>
                 <p className="text-[14px] font-normal leading-[150%] text-brand-main">
-                  {coffeeShopInfo?.description}
+                  {coffeeShopInfo?.Description}
                 </p>
               </>
             )}
@@ -315,7 +323,7 @@ function CoffeeShop() {
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
                   Serving coffee on
                 </h2>
-                {coffeeShopInfo?.availabilities.map((dayOfTheWeek, index) => (
+                {coffeeShopInfo?.Availabilities.map((dayOfTheWeek, index) => (
                   <div key={`schedule-${index}`}>
                     <div className="flex justify-between w-full">
                       <p className="text-[14px] font-normal leading-[150%] text-brand-main">
@@ -331,8 +339,8 @@ function CoffeeShop() {
             {selectedChip == 3 && (
               <>
                 <CoffeeReviewForm
-                  listOfProducts={coffeeShopInfo?.menu.map((item) => item.Name)}
-                  coffeeShopName={coffeeShopInfo!.name}
+                  listOfProducts={coffeeShopInfo?.Menu.map((item) => item.Name)}
+                  coffeeShopName={coffeeShopInfo!.Name}
                   addReview={addReview}
                 />
 
@@ -341,7 +349,7 @@ function CoffeeShop() {
                 </h2>
 
                 {reviews != null
-                  ? reviews.map((review: reviewInterface) => {
+                  ? reviews.map((review: IReview) => {
                       return (
                         <div
                           key={Math.random()}
