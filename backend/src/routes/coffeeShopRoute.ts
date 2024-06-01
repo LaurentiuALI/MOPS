@@ -5,7 +5,7 @@ import {
   getAllCoffeeShops,
   getCoffeeShopByCoffeeName,
   updateCoffeeShop,
-  deleteCoffeeShop,
+  deleteCoffeeShop, addItemToMenu,
   deleteMenuItem,
 } from "../controllers/coffeeShopController";
 
@@ -21,3 +21,4 @@ coffeeShopRouter.get(
 coffeeShopRouter.patch("/coffeeShops/:name", updateCoffeeShop);
 coffeeShopRouter.delete("/coffeeShops/:name", deleteCoffeeShop);
 coffeeShopRouter.patch("/coffeeShops/:name/menuItem", deleteMenuItem);
+coffeeShopRouter.post("/coffeeShops/addItemToMenu", addItemToMenu);

@@ -19,6 +19,10 @@ const coffeeSchema = new mongoose.Schema({
     Allergens: {
         type: [String], 
         required: false
+    },
+    Image: {
+        type: String,
+        required: false
     }
 });
 
