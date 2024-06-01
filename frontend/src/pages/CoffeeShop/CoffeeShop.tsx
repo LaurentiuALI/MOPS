@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import Chip from "../../components/Chips/Chip";
 import CoffeeCard from "../../components/CoffeeCard/CoffeeCard";
 import dummyCoffeeShopImage from "../../assets/images/coffee_shop.png";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import CoffeeReviewForm from "./CoffeeReviewForm";
 
@@ -97,24 +97,24 @@ const dummyData = {
 };
 
 const coffeesAvailable = {
-  "Americano": americano,
-  "Black Coffee": black_coffee,
-  "Cappuccino": cappuccino,
-  "Hazelnut Macchiato": hazelnut_machiato,
-  "Cold Brew": cold_brew,
-  "Flat White": flat_white,
-  "Irish Coffee": irish_coffee,
-  "Latte": latte,
-  "Mocha": mocha
-}
+  0: americano,
+  1: black_coffee,
+  2: cappuccino,
+  3: hazelnut_machiato,
+  4: cold_brew,
+  5: flat_white,
+  6: irish_coffee,
+  7: latte,
+  8: mocha,
+};
 
 export interface reviewInterface {
-  CoffeeShopName: string,
-  CoffeeName: string,
-  Username: string,
-  Rating: number,
-  Notes: string | null,
-  TimeStamp: string,
+  CoffeeShopName: string;
+  CoffeeName: string;
+  Username: string;
+  Rating: number;
+  Notes: string | null;
+  TimeStamp: string;
 }
 
 function CoffeeShop() {
@@ -126,72 +126,79 @@ function CoffeeShop() {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   interface coffeeDataTypes {
-    name: string,
-    coffees: [],
-    address: string,
-    availabilities: [],
-    serviceType: string,
-    description: string | null,
-    photos: [],
+    name: string;
+    menu: [];
+    address: string;
+    availabilities: [];
+    serviceType: string;
+    description: string | null;
+    photos: [];
   }
   const [coffeeShopInfo, setCoffeeShopInfo] = useState<coffeeDataTypes>();
   const [reviews, setReviews] = useState<reviewInterface[] | null>();
-  const [shopRating, setShopRating] = useState(0)
+  const [shopRating, setShopRating] = useState(0);
 
   const param = useParams();
   useEffect(() => {
     async function fetchData() {
       const coffeeShopDataResults = await axios.get(
         `${import.meta.env.VITE_URL}coffeeShops/${param.coffeeName}`
-      )
+      );
 
       const coffeeShopReviewsResult = await axios.get(
         `${import.meta.env.VITE_URL}reviews`
-      )
+      );
 
-      const coffeeShopRating = await axios.get(
-        `${import.meta.env.VITE_URL}reviews/rating/${param.coffeeName}`
-      ).catch((error)=>{
-        error
-      })
+      const coffeeShopRating = await axios
+        .get(`${import.meta.env.VITE_URL}reviews/rating/${param.coffeeName}`)
+        .catch((error) => {
+          error;
+        });
 
       if (coffeeShopDataResults) {
+        console.log(
+          "🚀 ~ fetchData ~ coffeeShopDataResults:",
+          coffeeShopDataResults
+        );
         setCoffeeShopInfo((prev) => {
-            return {
-              ...prev,
-              name: coffeeShopDataResults.data.Name,
-              coffees: coffeeShopDataResults.data.Coffees,
-              address: coffeeShopDataResults.data.Address,
-              availabilities: coffeeShopDataResults.data.Availabilities,
-              serviceType: coffeeShopDataResults.data.ServiceType,
-              description: coffeeShopDataResults.data.Description,
-              photos: coffeeShopDataResults.data.Photos
-            }
+          return {
+            ...prev,
+            name: coffeeShopDataResults.data.Name,
+            menu: coffeeShopDataResults.data.Menu,
+            address: coffeeShopDataResults.data.Address,
+            availabilities: coffeeShopDataResults.data.Availabilities,
+            serviceType: coffeeShopDataResults.data.ServiceType,
+            description: coffeeShopDataResults.data.Description,
+            photos: coffeeShopDataResults.data.Photos,
+          };
         });
       }
 
-      if(coffeeShopReviewsResult) {
-        const coffeeShopReviews = coffeeShopReviewsResult.data.filter((review : reviewInterface)=>{
-          return review.CoffeeShopName == param.coffeeName
-        })
+      if (coffeeShopReviewsResult) {
+        const coffeeShopReviews = coffeeShopReviewsResult.data.filter(
+          (review: reviewInterface) => {
+            return review.CoffeeShopName == param.coffeeName;
+          }
+        );
         setReviews(coffeeShopReviews);
       }
 
-      if(coffeeShopRating) {
-        setShopRating(()=>{
-          return Number((coffeeShopRating.data.AverageRating as number).toFixed(1))
-        })
+      if (coffeeShopRating) {
+        setShopRating(() => {
+          return Number(
+            (coffeeShopRating.data.AverageRating as number).toFixed(1)
+          );
+        });
       }
     }
 
     try {
       fetchData();
-
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
 
-    return () => {}
+    return () => {};
   }, [param.coffeeName]);
 
   function addReview(newReview: reviewInterface) {
@@ -199,11 +206,10 @@ function CoffeeShop() {
       if (prev != undefined) {
         const existingReviews = [...prev];
         existingReviews.unshift(newReview);
-        return existingReviews
+        return existingReviews;
       }
-    })
+    });
   }
-
 
   return (
     <>
@@ -243,14 +249,14 @@ function CoffeeShop() {
 
           <div className="flex justify-between px-[16px] pt-[16px]">
             <div className="flex gap-[4px] items-center">
-              {shopRating > 0 ? 
-              <>
-              <p className="text-brand-borderDark text-[12px] font-normal leading-[150%]">
-              {shopRating} 
-            </p><SVGStar title="rating icon" /></>
-            :
-            null}
-             
+              {shopRating > 0 ? (
+                <>
+                  <p className="text-brand-borderDark text-[12px] font-normal leading-[150%]">
+                    {shopRating}
+                  </p>
+                  <SVGStar title="rating icon" />
+                </>
+              ) : null}
             </div>
 
             <div className="flex gap-[8px] items-center">
@@ -265,7 +271,7 @@ function CoffeeShop() {
           <div className="flex gap-[12px] w-full items-center py-[16px] px-[16px] relative">
             {pageSections.map((section, index) => (
               <Chip
-              key={`chip-${index}`}
+                key={`chip-${index}`}
                 selected={index == selectedChip}
                 onClick={() => setSelectedChip(index)}
               >
@@ -277,14 +283,16 @@ function CoffeeShop() {
           <div className="px-[16px] flex flex-col gap-[12px] pb-[16px]">
             {selectedChip == 0 && (
               <div className="grid grid-cols-2 gap-[16px]">
-                {coffeeShopInfo?.coffees.map((product,index) => {
+                {coffeeShopInfo?.menu.map((product, index) => {
                   return (
                     <CoffeeCard
                       key={`coffeeCard-${index}`}
-                      coffeeName={product}
-                      price={5.00}
+                      coffeeName={product.Name}
+                      price={product.Price}
                       rating={4.2}
-                      imgSrc={coffeesAvailable[product]}
+                      imgSrc={
+                        coffeesAvailable[Math.floor(Math.random() * 8) + 1]
+                      }
                     />
                   );
                 })}
@@ -294,10 +302,10 @@ function CoffeeShop() {
             {selectedChip == 1 && (
               <>
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
-                  {dummyData.description.title}
+                  About {coffeeShopInfo?.name}
                 </h2>
                 <p className="text-[14px] font-normal leading-[150%] text-brand-main">
-                  {dummyData.description.content}
+                  {coffeeShopInfo?.description}
                 </p>
               </>
             )}
@@ -305,16 +313,13 @@ function CoffeeShop() {
             {selectedChip == 2 && (
               <>
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
-                  {dummyData.schedule.title}
+                  Serving coffee on
                 </h2>
-                {dummyData.schedule.days.map((dayOfTheWeek,index) => (
+                {coffeeShopInfo?.availabilities.map((dayOfTheWeek, index) => (
                   <div key={`schedule-${index}`}>
                     <div className="flex justify-between w-full">
                       <p className="text-[14px] font-normal leading-[150%] text-brand-main">
-                        {dayOfTheWeek.day}
-                      </p>
-                      <p className="text-[14px] font-normal leading-[150%] text-brand-black">
-                        {dayOfTheWeek.openingTime}
+                        {dayOfTheWeek}
                       </p>
                     </div>
                     <div className="h-[1px] w-full border border-brand-borderDark"></div>
@@ -325,47 +330,51 @@ function CoffeeShop() {
 
             {selectedChip == 3 && (
               <>
-                <CoffeeReviewForm listOfProducts={coffeeShopInfo?.coffees} coffeeShopName={coffeeShopInfo!.name} addReview={addReview} />
+                <CoffeeReviewForm
+                  listOfProducts={coffeeShopInfo?.menu.map((item) => item.Name)}
+                  coffeeShopName={coffeeShopInfo!.name}
+                  addReview={addReview}
+                />
 
                 <h2 className="font-bold ">
                   Read what our customers have to say about us
                 </h2>
 
-                {
-                  reviews != null ?
-                  reviews.map((review:reviewInterface)=>{
-                      return (                 
-                          <div key={Math.random()} className="flex p-[12px] gap-[8px] flex-col items-start bg-brand-white rounded-xl">
-                            <div className="flex justify-between w-full">
-                              <h3>Coffee: {review.CoffeeName}</h3>
+                {reviews != null
+                  ? reviews.map((review: reviewInterface) => {
+                      return (
+                        <div
+                          key={Math.random()}
+                          className="flex p-[12px] gap-[8px] flex-col items-start bg-brand-white rounded-xl"
+                        >
+                          <div className="flex justify-between w-full">
+                            <h3>Coffee: {review.CoffeeName}</h3>
 
-                              <div className="flex flex-row gap-[4px]">
-                                <h4 className="font-bold">{review.Rating}</h4>
-                                <SVGStar title="rating icon" className="self-center" />
-                              </div>
+                            <div className="flex flex-row gap-[4px]">
+                              <h4 className="font-bold">{review.Rating}</h4>
+                              <SVGStar
+                                title="rating icon"
+                                className="self-center"
+                              />
                             </div>
-                            
-                            <div className="flex justify-between w-full">
-                              <h5 className="font-semibold">User: {review.Username}</h5>
-                              <p>{review.TimeStamp.slice(0, 10)}</p>
-                            </div>
-                            
-
-                            <p>{review.Notes}</p>
                           </div>
-                      )
-                  })
-                  : null
-                }
 
-                {
-                  reviews != null && 
-                  (reviews.length == 0 && 
-                    <p>
-                      There are currently no reviews for the coffee shop. 
-                    </p>
-                  ) 
-                }
+                          <div className="flex justify-between w-full">
+                            <h5 className="font-semibold">
+                              User: {review.Username}
+                            </h5>
+                            <p>{review.TimeStamp.slice(0, 10)}</p>
+                          </div>
+
+                          <p>{review.Notes}</p>
+                        </div>
+                      );
+                    })
+                  : null}
+
+                {reviews != null && reviews.length == 0 && (
+                  <p>There are currently no reviews for the coffee shop.</p>
+                )}
               </>
             )}
           </div>

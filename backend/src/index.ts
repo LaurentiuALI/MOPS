@@ -6,6 +6,7 @@ import { coffeeShopRouter } from "./routes/coffeeShopRoute";
 import { coffeeRouter } from "./routes/coffeeRoute";
 import { reviewRouter } from "./routes/reviewRoute";
 import cors from "cors";
+import managerRouter from "./routes/managerRouter";
 
 //For env File
 config();
@@ -28,6 +29,7 @@ app.use("/api", userRouter);
 app.use("/api", coffeeShopRouter);
 app.use("/api", coffeeRouter);
 app.use("/api", reviewRouter);
+app.use("/api", managerRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");
