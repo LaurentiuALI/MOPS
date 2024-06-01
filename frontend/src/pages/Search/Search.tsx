@@ -30,7 +30,7 @@ type coffeeShop = {
   ServiceType: string;
   Description: string;
   Photos: [string];
-}
+};
 
 export default function Search() {
   const navigate = useNavigate();
@@ -44,53 +44,53 @@ export default function Search() {
   const [dataIsLoading, setDataIsLoading] = useState(true);
 
   const { latitude, longitude } = useLocationStore();
-  
+
   const dummyPictureOfCafe = [
     dummyCoffeeShopImage,
     coffeeMachines,
     modernCafe,
     retroCafe,
     tableAtCafe,
-    barista
-  ]
+    barista,
+  ];
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_URL}coffeeShops`).then((response) => {
-      setCoffeeShops(response.data);
-    }).then((data)=>{
-      console.log(data);
-    });    
+    axios
+      .get(`${import.meta.env.VITE_URL}coffeeShops`)
+      .then((response) => {
+        setCoffeeShops(response.data);
+      })
+      .then((data) => {
+        console.log(data);
+      });
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios
+        .get(`${import.meta.env.VITE_URL}coffeeShops/byCoffee/${search}`)
+        .catch((error) => {
+          console.log(error);
+        });
 
-    const fetchData = async ()=>{
-      const result =  await axios.get(
-        `${import.meta.env.VITE_URL}coffeeShops/byCoffee/${search}`
-      ).catch((error)=>{
-        console.log(error);
-      })
-      
-      if (result){
-        setCoffeeShops(result.data)
+      if (result) {
+        setCoffeeShops(result.data);
       }
-    }
+    };
 
     try {
-      if (search.length > 0){
-        fetchData()
+      if (search.length > 0) {
+        fetchData();
       }
     } catch (error) {
       console.log(error);
     }
 
     setDataIsLoading(false);
-    
 
     // cleanup function
-    return ()=>{}
-
-  },[search]);
+    return () => {};
+  }, [search]);
 
   interface CoffeeType {
     name: string;
@@ -189,11 +189,13 @@ export default function Search() {
           />
         </div>
         <main className="h-full bg-brand-secondary">
-          <div className={`flex flex-wrap gap-[12px] w-full items-center pt-[16px] px-[16px] relative overflow-hidden h-${listOfChipsSize}`}>
-            {chips.map((chip,index) => (
+          <div
+            className={`flex flex-wrap gap-[12px] w-full items-center pt-[16px] px-[16px] relative overflow-hidden h-${listOfChipsSize}`}
+          >
+            {chips.map((chip, index) => (
               <Chip
-              key={`chip-${index}`}
-              className="min-w-[25%]"
+                key={`chip-${index}`}
+                className="min-w-[25%]"
                 selected={chip.name == search}
                 // onClick={() => {
                 //   if (!chip.isSelected)
@@ -225,7 +227,7 @@ export default function Search() {
                 //   });
                 // }}
                 onClick={() => {
-                  updateSearch(chip.name)
+                  updateSearch(chip.name);
                 }}
               >
                 {chip.name}
@@ -234,7 +236,7 @@ export default function Search() {
             <Chip
               selected={distanceSet}
               onClick={() => {
-                setDistanceSet(!distanceSet)
+                setDistanceSet(!distanceSet);
               }}
             >
               500m
@@ -245,19 +247,19 @@ export default function Search() {
               title="Filter the results"
               color="#222"
               onClick={() => {
-                setListOfChipsSize( prev => {
+                setListOfChipsSize((prev) => {
                   if (prev == 14) return 13;
                   else return 14;
-                })
+                });
               }}
             />
           </div>
 
           <div className="mt-[16px] grid grid-cols-2 pb-[16px] px-[16px] gap-[16px]">
-
             {dataIsLoading && <Loading />}
 
-            {!dataIsLoading && coffeeShops &&
+            {!dataIsLoading &&
+              coffeeShops &&
               coffeeShops.map((cafe) => {
                 const distance = getDistance(
                   { latitude: latitude, longitude: longitude },
@@ -270,14 +272,15 @@ export default function Search() {
                   return (
                     <CafeCard
                       key={`${cafe.Name}${Math.random}`}
-                      cafeImage={
-
-                        {
-                          src: dummyPictureOfCafe[Math.floor(Math.random() * (dummyPictureOfCafe.length-1))],
-                          alt: "Coffee Shop Interior",
-                          title: "Main Image for Coffee Shop"
-                        }
-                      }
+                      cafeImage={{
+                        src: dummyPictureOfCafe[
+                          Math.floor(
+                            Math.random() * (dummyPictureOfCafe.length - 1)
+                          )
+                        ],
+                        alt: "Coffee Shop Interior",
+                        title: "Main Image for Coffee Shop",
+                      }}
                       cafeName={cafe.Name}
                       distance={distance}
                       isFavorite={false}
@@ -292,14 +295,15 @@ export default function Search() {
                   return (
                     <CafeCard
                       key={`${cafe.Name}${Math.random}`}
-                      cafeImage={
-
-                        {
-                          src: dummyPictureOfCafe[Math.floor(Math.random() * (dummyPictureOfCafe.length-1))],
-                          alt: "Coffee Shop Interior",
-                          title: "Main Image for Coffee Shop"
-                        }
-                      }
+                      cafeImage={{
+                        src: dummyPictureOfCafe[
+                          Math.floor(
+                            Math.random() * (dummyPictureOfCafe.length - 1)
+                          )
+                        ],
+                        alt: "Coffee Shop Interior",
+                        title: "Main Image for Coffee Shop",
+                      }}
                       cafeName={cafe.Name}
                       distance={distance}
                       isFavorite={false}

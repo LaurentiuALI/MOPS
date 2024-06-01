@@ -23,19 +23,19 @@ import mocha from "../../assets/images/coffees/mocha.png";
 import { FaPlusCircle } from "react-icons/fa";
 
 const coffeesAvailable = {
-  Americano: americano,
-  "Black Coffee": black_coffee,
-  Cappuccino: cappuccino,
-  "Hazelnut Macchiato": hazelnut_machiato,
-  "Cold Brew": cold_brew,
-  "Flat White": flat_white,
-  "Irish Coffee": irish_coffee,
-  Latte: latte,
-  Mocha: mocha,
+  0: americano,
+  1: black_coffee,
+  2: cappuccino,
+  3: hazelnut_machiato,
+  4: cold_brew,
+  5: flat_white,
+  6: irish_coffee,
+  7: latte,
+  8: mocha,
 };
 interface coffeeDataTypes {
   name: string;
-  coffees: [];
+  menu: [];
   address: string;
   availabilities: [];
   serviceType: string;
@@ -73,8 +73,8 @@ const Manager = () => {
   const handleRemoveCoffee = (index: number) => {
     setCoffeeShop((prev) => {
       if (!prev) return prev;
-      const updatedCoffees = prev.Coffees.filter((_, i) => i !== index);
-      return { ...prev, Coffees: updatedCoffees };
+      const updatedCoffees = prev.Menu.filter((_, i) => i !== index);
+      return { ...prev, Menu: updatedCoffees };
     });
   };
 
@@ -110,7 +110,7 @@ const Manager = () => {
           </p>
 
           <img
-            src={coffeeShop?.Photos?.[0] || dummyCoffeeShopImage}
+            src={dummyCoffeeShopImage}
             className="h-60 px-4 w-full rounded-25"
           />
 
@@ -150,12 +150,13 @@ const Manager = () => {
           <div className="px-4 flex flex-col gap-3 pb-4">
             {selectedChip === 0 && (
               <div>
-                {coffeeShop?.Coffees.map((product, index) => (
+                {coffeeShop?.Menu.map((product, index) => (
                   <CoffeeCardRow
                     key={`coffeeCardRow-${index}`}
-                    coffeeName={product}
+                    coffeeName={product.Name}
                     coffeeImage={
-                      coffeesAvailable[product] || dummyCoffeeShopImage
+                      coffeesAvailable[Math.floor(Math.random() * 9)] ||
+                      dummyCoffeeShopImage
                     }
                     price={5.0}
                     rating={4.2}
