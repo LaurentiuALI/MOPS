@@ -14,16 +14,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import CoffeeReviewForm from "./CoffeeReviewForm";
 
-import americano from "../../assets/images/coffees/americano.png";
-import black_coffee from "../../assets/images/coffees/black_coffee.png";
-import cappuccino from "../../assets/images/coffees/cappuccino.png";
-import hazelnut_machiato from "../../assets/images/coffees/hazelnut_machiato.png";
-import cold_brew from "../../assets/images/coffees/cold_brew.png";
-import flat_white from "../../assets/images/coffees/flat_white.png";
-import irish_coffee from "../../assets/images/coffees/irish_coffee.png";
-import latte from "../../assets/images/coffees/latte.png";
-import mocha from "../../assets/images/coffees/mocha.png";
-
 const dummyData = {
   coffeShopName: "Magic Brew",
   address: "2118 Thornridge Cir. Syracuse, Connecticut 35624",
@@ -96,18 +86,6 @@ const dummyData = {
   ],
 };
 
-const coffeesAvailable = {
-  0: americano,
-  1: black_coffee,
-  2: cappuccino,
-  3: hazelnut_machiato,
-  4: cold_brew,
-  5: flat_white,
-  6: irish_coffee,
-  7: latte,
-  8: mocha,
-};
-
 export type IReview = {
   CoffeeShopName: string;
   CoffeeName: string;
@@ -129,7 +107,9 @@ type ICoffeeShop = {
   ManagerId: number;
   Menu: [IMenuItem];
   Address: string;
-  Availabilities: [{workDay: string, openingHour:string,closingHour:string}];
+  Availabilities: [
+    { workDay: string; openingHour: string; closingHour: string }
+  ];
   ServiceType: string;
   Description: string;
   Photos: [string];
@@ -294,13 +274,8 @@ function CoffeeShop() {
                       key={`coffeeCard-${index}`}
                       coffeeName={product.Name}
                       price={product.Price}
+                      quantity={product.Quantity}
                       rating={4.2}
-                      imgSrc={
-                        coffeesAvailable[
-                          (Math.floor(Math.random() * 8) +
-                            1) as keyof typeof coffeesAvailable
-                        ]
-                      }
                     />
                   );
                 })}
@@ -329,7 +304,9 @@ function CoffeeShop() {
                       <p className="text-[14px] font-normal leading-[150%] text-brand-main">
                         {day.workDay}
                       </p>
-                      <p>{day.openingHour} - {day.closingHour}</p>
+                      <p>
+                        {day.openingHour} - {day.closingHour}
+                      </p>
                     </div>
                     <div className="h-[1px] w-full border border-brand-borderDark"></div>
                   </div>
