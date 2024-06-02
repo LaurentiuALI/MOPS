@@ -231,9 +231,29 @@ const Manager = () => {
                 <h2 className="text-lg font-bold leading-130% text-brand-black">
                   Description
                 </h2>
-                <p className="text-sm font-normal leading-150% text-brand-main">
-                  {coffeeShop?.Description || "No description available"}
-                </p>
+                <div className="flex center justify-between w-full">
+                  <p contentEditable id="cofee-shop-description" className="text-sm font-normal leading-150% text-brand-main">
+                    {coffeeShop?.Description || "No description available"}
+                  </p>
+                  <SVGPen title="edit" className="mt-4" onClick={()=>{
+                    const newDescription = document.getElementById("cofee-shop-description")?.innerText
+                    if(newDescription != coffeeShop?.Description && (typeof newDescription == 'string')){
+                      console.log(newDescription);
+                      
+                      axios.put(`${import.meta.env.VITE_URL}coffeeshop/manager/${coffeeShop?.Name}/description`,
+                        {
+                          newDescription : newDescription
+                        }
+                      ).then(data =>{
+                        console.log(data);
+                      }).catch(error=>{
+                        console.log(error);
+                      })
+                    }else{
+                      document.getElementById("cofee-shop-description")?.focus()
+                    }
+                  }}/>
+                </div>
               </>
             )}
 
