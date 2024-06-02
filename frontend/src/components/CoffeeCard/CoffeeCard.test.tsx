@@ -4,7 +4,9 @@ import CoffeeCard from "./CoffeeCard";
 
 describe("it should make sure Coffee Card is working", () => {
   it("should render properly", () => {
-    render(<CoffeeCard coffeeName="test coffee" price={2} rating={5} />);
+    render(
+      <CoffeeCard coffeeName="test coffee" price={2} rating={5} quantity={5} />
+    );
 
     const img = screen.getByAltText(/cappuccino/i);
     expect(img).toBeInTheDocument();
