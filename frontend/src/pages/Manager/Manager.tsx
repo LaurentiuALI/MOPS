@@ -237,27 +237,7 @@ const Manager = () => {
               </>
             )}
 
-            {selectedChip === 2 &&
-              coffeeShop?.Photos &&
-              coffeeShop.Photos.length > 0 && (
-                <>
-                  <h2 className="text-lg font-bold leading-130% text-brand-black">
-                    Photos
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {coffeeShop.Photos.map((photo, index) => (
-                      <img
-                        key={`photo-${index}`}
-                        src={photo}
-                        alt={`Coffee Shop ${index + 1}`}
-                        className="w-full h-auto rounded-lg"
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-
-            {selectedChip == 3 && (
+            {selectedChip == 2 && (
               <>
                 <h2 className="text-[20px] font-bold leading-[130%] text-brand-black">
                   Serving coffee on
