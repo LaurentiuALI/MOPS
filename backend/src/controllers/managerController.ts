@@ -73,3 +73,31 @@ export const updateCoffeeShopAddress = async(req:Request, res: Response): Promis
       })
   }
 }
+
+export const updateCoffeeShopDescription = async(req: Request, res: Response): Promise<void> => {
+    try {
+        const newDescription = req.body.newDescription
+        console.log("newDescription =", newDescription);
+        
+        const result = await CoffeeShop.updateOne({Name:req.params.coffeeName.toString()},{
+            Description: newDescription
+        })
+  
+        if(result) {
+            res.status(200).json({
+                message: "Coffee Shop description updated",
+            })
+            return
+        }else{
+            res.status(404).json({
+                message: "Coffee Shop was not found"
+            })
+            return
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error",
+            error
+        })
+    }
+}
