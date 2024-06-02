@@ -1,6 +1,7 @@
 import Coffee from "../models/coffeeModel";
 import { Request, Response } from 'express';
 import cloudinary from '../cloudinary';
+import { MongoError } from "mongodb";
 
 // Create coffee
 export const addCoffee = async (req: Request, res: Response) => {
@@ -32,6 +33,10 @@ export const addCoffee = async (req: Request, res: Response) => {
 
         res.status(201).json({ message: "Coffee created successfully", coffee });
     } catch (error) {
+        if((error as MongoError).code == 11000){
+            res.status(201).json({ message: "Coffee already exists" });
+            return
+        }
         console.error(error);
         res.status(500).json({ message: "Error creating coffee", error });
     }
