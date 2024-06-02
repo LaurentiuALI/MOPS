@@ -59,7 +59,8 @@ const AddProduct: React.FC = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_URL}coffees/add`, formData);
+      await axios.post(`${import.meta.env.VITE_URL}coffees/add`, formData)
+      // .then(data=>console.log(data.data.message)); // for debugging purposes
       await axios.post(`${import.meta.env.VITE_URL}coffeeShops/addItemToMenu`, {
         ManagerId: managerId,
         Coffee: { Name: productName, Price: price, Quantity: 1 },
