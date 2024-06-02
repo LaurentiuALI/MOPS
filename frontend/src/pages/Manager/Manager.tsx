@@ -194,17 +194,15 @@ const Manager = () => {
 
         <main className="h-full bg-brand-light">
           <div className="flex gap-3 w-full items-center py-4 px-4 relative">
-            {["Products", "Description", "Photos", "Schedule"].map(
-              (section, index) => (
-                <Chip
-                  key={`chip-${index}`}
-                  selected={index === selectedChip}
-                  onClick={() => setSelectedChip(index)}
-                >
-                  {section}
-                </Chip>
-              )
-            )}
+            {["Products", "Description", "Schedule"].map((section, index) => (
+              <Chip
+                key={`chip-${index}`}
+                selected={index === selectedChip}
+                onClick={() => setSelectedChip(index)}
+              >
+                {section}
+              </Chip>
+            ))}
           </div>
 
           <div className="px-4 flex flex-col gap-3 pb-4">
